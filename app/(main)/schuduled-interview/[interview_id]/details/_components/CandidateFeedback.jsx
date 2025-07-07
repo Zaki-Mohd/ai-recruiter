@@ -69,13 +69,14 @@ function CandidateFeedback({ candidate }) {
                 </div>
               </div>
 
-              <div className={`p-5 mt-10 flex items-center justify-between rounded-md ${feedback?.Recommendation === 'No' ? 'bg-red-100' : 'bg-green-100'}`}>
+                            <div className={`p-5 mt-10 flex items-center justify-between rounded-md ${feedback?.recommendation === false ? 'bg-red-100' : 'bg-green-100'}`}>
                 <div>
-                  <h2 className={`font-bold ${feedback?.Recommendation === 'No' ? 'text-red-700' : 'text-green-700'}`}>Recommendation Msg:</h2>
-                  <p className={`${feedback?.Recommendation === 'No' ? 'text-red-700' : 'text-green-700'}`}>{feedback?.RecommendationMsg}</p>
+                  <h2 className={`font-bold ${feedback?.recommendation === false ? 'text-red-700' : 'text-green-700'}`}>Recommendation Msg :</h2>
+                  <p className={`${feedback?.recommendation === false ? 'text-red-700' : 'text-green-700'}`}>{feedback?.recommendationMsg}</p>
                 </div>
-                <Button className={`${feedback?.Recommendation === 'No' ? 'bg-red-700' : 'bg-green-700'}`}>Send Msg</Button>
+                <Button className={`${feedback?.recommendation === false ? 'bg-red-700' : 'bg-green-700'}`}>Send Msg</Button>
               </div>
+
             </div>
           </DialogDescription>
         </DialogHeader>
