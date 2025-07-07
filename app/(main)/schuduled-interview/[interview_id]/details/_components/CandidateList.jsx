@@ -7,15 +7,12 @@ function CandidateList({ candidatelist }) {
   return (
     <div className='bg-gray-100 rounded-xl px-5 py-5 mt-7'>
       <h2 className='font-bold my-5'>Candidates ({candidatelist?.length ?? 0})</h2>
-
       {candidatelist?.map((candidate, index) => (
         <div key={index} className='p-5 flex items-center justify-between gap-3'>
-          {/* Avatar + name block */}
           <div className='flex items-center gap-3'>
             <h2 className='h-10 w-10 flex items-center justify-center bg-primary text-white rounded-full'>
               {candidate?.userName?.[0] ?? '-'}
             </h2>
-
             <div>
               <h2>{candidate?.userName}</h2>
               <h2 className='text-sm text-gray-500'>
@@ -23,11 +20,9 @@ function CandidateList({ candidatelist }) {
               </h2>
             </div>
           </div>
-
-          {/* Button on right */}
           <div className='flex gap-3 items-center'>
-            <h2 className='text-green-600'>6/10</h2>
-            <CandidateFeedback  candidate={candidate} />
+            <h2 className='text-green-600'>{candidate?.feedback?.feedback?.rating?.technicalSkills ?? 0}/10</h2>
+            <CandidateFeedback candidate={candidate} />
           </div>
         </div>
       ))}
