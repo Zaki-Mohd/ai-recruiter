@@ -1,10 +1,12 @@
 "use client";
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react'; // Import useRef
 
 function ResumeUpload() {
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploadStatus, setUploadStatus] = useState('');
   const [interviewLink, setInterviewLink] = useState(null);
+
+  const fileInputRef = useRef(null); // Create a ref for the file input
 
   const handleFileChange = (event) => {
     setSelectedFile(event.target.files[0]);
@@ -48,39 +50,60 @@ function ResumeUpload() {
     }
   };
 
+  // Function to trigger the file input click
+  const triggerFileInput = () => {
+    fileInputRef.current.click();
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-2xl font-bold mb-4">Upload Your Resume</h1>
-      <div className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-8">
+      <div 
+        className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-8 cursor-pointer hover:border-blue-500"
+        onClick={triggerFileInput} // Trigger file input on click
+      >
+        {/* Hidden file input */}
         <input 
           type="file" 
           accept=".pdf,.doc,.docx" 
           onChange={handleFileChange} 
-          className="mb-4"
+          className="hidden" // Hide the input
+          ref={fileInputRef} // Assign the ref
         />
-        <button 
-          onClick={handleUpload} 
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          disabled={uploadStatus === 'Uploading...'}
-        >
-          {uploadStatus === 'Uploading...' ? 'Uploading...' : 'Upload Resume'}
-        </button>
-        {selectedFile && <p className="mt-2">Selected file: {selectedFile.name}</p>}
-        {uploadStatus && <p className="mt-2 text-blue-600">{uploadStatus}</p>}
-        {interviewLink && (
-          <div className="mt-4">
-            <h2 className="text-xl font-semibold">Your Interview Link:</h2>
-            <a 
-              href={interviewLink} 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              className="text-blue-500 hover:underline"
-            >
-              {interviewLink}
-            </a>
-          </div>
+        
+        {/* Display text based on whether a file is selected */}
+        {selectedFile ? (
+          <p>Selected file: {selectedFile.name}</p>
+        ) : (
+          <p>Drag and drop a resume here, or click to select a file (PDF or DOCX)</p>
         )}
+
       </div>
+
+      <div className="flex justify-center mt-4">
+        <button 
+            onClick={handleUpload} 
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            disabled={!selectedFile || uploadStatus === 'Uploading...'} // Disable if no file selected or uploading
+          >
+            {uploadStatus === 'Uploading...' ? 'Uploading...' : 'Upload Resume'}
+          </button>
+      </div>
+
+      {uploadStatus && <p className="mt-4 text-center text-blue-600">{uploadStatus}</p>}
+      {interviewLink && (
+        <div className="mt-4 text-center">
+          <h2 className="text-xl font-semibold">Your Interview Link:</h2>
+          <a 
+            href={interviewLink} 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="text-blue-500 hover:underline"
+          >
+            {interviewLink}
+          </a>
+        </div>
+      )}
     </div>
   );
 }
