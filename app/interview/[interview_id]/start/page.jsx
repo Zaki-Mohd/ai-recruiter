@@ -29,7 +29,7 @@ function StartInterview() {
       const { data, error } = await supabase
         .from('resumes')
         .select('resumeText') // Select the resumeText column
-        .eq('id', interview_id) // Filter by the interview_id (which is the resume ID)
+        .eq('interview_id', interview_id) // Corrected: Filter by the 'interview_id' column
         .single(); // Expect a single row
 
       if (error) {
@@ -53,17 +53,17 @@ function StartInterview() {
 
   // Start interview when info is ready, vapi is ready, and resumeData is ready
   useEffect(() => {
-    console.log('Checking conditions for startCall...'); // Added log
-    console.log('interviewInfo:', interviewInfo); // Added log
-    console.log('vapi:', vapi); // Added log
-    console.log('resumeData:', resumeData); // Added log
+    console.log('Checking conditions for startCall...');
+    console.log('interviewInfo:', interviewInfo);
+    console.log('vapi:', vapi);
+    console.log('resumeData:', resumeData);
     if (interviewInfo && vapi && resumeData) {
-      console.log('Conditions met, calling startCall()'); // Added log
+      console.log('Conditions met, calling startCall()');
       startCall();
     } else {
-      console.log('Conditions not met for startCall()'); // Added log
+      console.log('Conditions not met for startCall()');
     }
-  }, [interviewInfo, vapi, resumeData]); // Add resumeData to dependencies
+  }, [interviewInfo, vapi, resumeData]); 
 
   const startCall = () => {
     console.log("startCall() called");
@@ -171,17 +171,17 @@ After the questions, wrap up the interview politely and end on a positive note.
     };
 
     vapi.on("message", handleMessage);
-vapi.on("call-start", handleCallStart);
-vapi.on("speech-start", handleSpeechStart);
-vapi.on("speech-end", handleSpeechEnd);
-vapi.on("call-end", handleCallEnd);
+    vapi.on("call-start", handleCallStart);
+    vapi.on("speech-start", handleSpeechStart);
+    vapi.on("speech-end", handleSpeechEnd);
+    vapi.on("call-end", handleCallEnd);
 
     return () => {
       vapi.off("message", handleMessage);
-vapi.off("call-start", handleCallStart);
-vapi.off("speech-start", handleSpeechStart);
-vapi.off("speech-end", handleSpeechEnd);
-vapi.off("call-end", handleCallEnd);
+      vapi.off("call-start", handleCallStart);
+      vapi.off("speech-start", handleSpeechStart);
+      vapi.off("speech-end", handleSpeechEnd);
+      vapi.off("call-end", handleCallEnd);
     };
   }, [vapi]);
 
