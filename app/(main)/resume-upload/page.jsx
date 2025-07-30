@@ -9,9 +9,18 @@ function ResumeUpload() {
   const fileInputRef = useRef(null); // Create a ref for the file input
 
   const handleFileChange = (event) => {
-    setSelectedFile(event.target.files[0]);
-    setUploadStatus(''); // Clear status when a new file is selected
-    setInterviewLink(null); // Clear previous link
+    console.log('handleFileChange triggered'); // Log when the function is called
+    console.log('Event target files:', event.target.files); // Log the files object
+
+    if (event.target.files && event.target.files.length > 0) {
+      console.log('File selected:', event.target.files[0]); // Log the selected file
+      setSelectedFile(event.target.files[0]);
+      setUploadStatus(''); // Clear status when a new file is selected
+      setInterviewLink(null); // Clear previous link
+    } else {
+      console.log('No file selected'); // Log if no file is selected
+      setSelectedFile(null);
+    }
   };
 
   const handleUpload = async () => {
