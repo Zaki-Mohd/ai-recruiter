@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import mammoth from 'mammoth';
 import { supabase } from '../../../../services/supabaseClient'; // Adjust the path as necessary
-import PDFExtraction from 'pdf-extraction';
+import extract from 'pdf-extraction'; // Changed import
 
 export async function POST(request) {
   try {
@@ -21,9 +21,8 @@ export async function POST(request) {
       resumeText = result.value;
     } else if (fileType === 'application/pdf') {
       // Use pdf-extraction for PDF parsing
-      const pdfExtractor = new PDFExtraction();
-      const { text } = await pdfExtractor.extractRawText({ buffer: Buffer.from(fileBuffer) });
-      resumeText = text;
+      const data = await extract(Buffer.from(fileBuffer)); // Changed usage
+      resumeText = data.text;
     } else {
       return NextResponse.json({ error: 'Unsupported file type' }, { status: 400 });
     }
