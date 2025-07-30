@@ -19,6 +19,31 @@ function StartInterview() {
   const { interview_id } = useParams();
   const router = useRouter();
 
+  const [resumeData, setResumeData] = useState(null); // State to store resume data
+
+  // Fetch resume data from Supabase
+  useEffect(() => {
+    const fetchResumeData = async () => {
+      if (!interview_id) return; // Don't fetch if interview_id is not available
+
+      const { data, error } = await supabase
+        .from('resumes')
+        .select('resumeText') // Select the resumeText column
+        .eq('id', interview_id) // Filter by the interview_id (which is the resume ID)
+        .single(); // Expect a single row
+
+      if (error) {
+        console.error('Error fetching resume data:', error);
+        toast.error('Failed to load resume data.'); // Show an error toast
+      } else if (data) {
+        setResumeData(data); // Store the fetched resume data
+        console.log('Fetched Resume Data:', data);
+      }
+    };
+
+    fetchResumeData();
+  }, [interview_id]); // Refetch when interview_id changes
+
   // Initialize Vapi once
   useEffect(() => {
     const instance = new Vapi(process.env.NEXT_PUBLIC_VAPI_PUBLIC_KEY);
@@ -26,10 +51,10 @@ function StartInterview() {
     return () => instance.stop();
   }, []);
 
-  // Start interview when info is ready and vapi is ready
+  // Start interview when info is ready, vapi is ready, and resumeData is ready
   useEffect(() => {
-    if (interviewInfo && vapi) startCall();
-  }, [interviewInfo, vapi]);
+    if (interviewInfo && vapi && resumeData) startCall();
+  }, [interviewInfo, vapi, resumeData]); // Add resumeData to dependencies
 
   const startCall = () => {
     console.log("startCall() called");
@@ -71,11 +96,29 @@ function StartInterview() {
           {
             role: "system",
             content: `
-You are an AI voice assistant conducting interviews.
+You are an AI voice assistant conducting interviews for the role of ${interviewInfo?.interviewData?.jobPosition || 'a position'}.
+Your primary goal is to evaluate the candidate's suitability for this role based on their resume and responses.
+
 Begin with a friendly introduction.
-Ask these questions one by one: ${questionList}
+
+Use the following resume data to formulate specific questions about the candidate's past experience, skills, and projects. Probe deeper into the details provided in the resume.
+
+Resume Data:
+---
+${resumeData.resumeText}
+---
+
+In addition to resume-based questions, ask some of the following general interview questions to assess their broader capabilities:
+
+General Questions: ${questionList}
+
+Listen carefully to the candidate's answers. Evaluate their responses against the information in the resume and the requirements of the ${interviewInfo?.interviewData?.jobPosition || 'position'}. Look for consistency, depth of knowledge, and relevant experience.
+
 Offer hints if the candidate struggles.
-After 5–7 questions, wrap up and end on a positive note.
+
+Conduct a structured interview covering key aspects of the resume and general interview topics. Aim for a total of 5–7 questions (a mix of resume-based and general questions).
+
+After the questions, wrap up the interview politely and end on a positive note.
             `.trim(),
           },
         ],
@@ -119,17 +162,17 @@ After 5–7 questions, wrap up and end on a positive note.
     };
 
     vapi.on("message", handleMessage);
-    vapi.on("call-start", handleCallStart);
-    vapi.on("speech-start", handleSpeechStart);
-    vapi.on("speech-end", handleSpeechEnd);
-    vapi.on("call-end", handleCallEnd);
+vapi.on("call-start", handleCallStart);
+vapi.on("speech-start", handleSpeechStart);
+vapi.on("speech-end", handleSpeechEnd);
+vapi.on("call-end", handleCallEnd);
 
     return () => {
       vapi.off("message", handleMessage);
-      vapi.off("call-start", handleCallStart);
-      vapi.off("speech-start", handleSpeechStart);
-      vapi.off("speech-end", handleSpeechEnd);
-      vapi.off("call-end", handleCallEnd);
+vapi.off("call-start", handleCallStart);
+vapi.off("speech-start", handleSpeechStart);
+vapi.off("speech-end", handleSpeechEnd);
+vapi.off("call-end", handleCallEnd);
     };
   }, [vapi]);
 
