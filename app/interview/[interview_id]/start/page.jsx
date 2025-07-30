@@ -53,7 +53,16 @@ function StartInterview() {
 
   // Start interview when info is ready, vapi is ready, and resumeData is ready
   useEffect(() => {
-    if (interviewInfo && vapi && resumeData) startCall();
+    console.log('Checking conditions for startCall...'); // Added log
+    console.log('interviewInfo:', interviewInfo); // Added log
+    console.log('vapi:', vapi); // Added log
+    console.log('resumeData:', resumeData); // Added log
+    if (interviewInfo && vapi && resumeData) {
+      console.log('Conditions met, calling startCall()'); // Added log
+      startCall();
+    } else {
+      console.log('Conditions not met for startCall()'); // Added log
+    }
   }, [interviewInfo, vapi, resumeData]); // Add resumeData to dependencies
 
   const startCall = () => {
