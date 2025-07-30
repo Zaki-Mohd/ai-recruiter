@@ -5,7 +5,7 @@ const nextConfig = {
     },
     webpack: (config, { isServer }) => {
       config.module.rules.push({
-        test: new RegExp('node_modules/pdfjs-dist/.*test'),
+        test: /pdfjs-dist/.*?/test/data/05-versions-space.pdf$/,
         use: 'null-loader',
       });
       return config;
