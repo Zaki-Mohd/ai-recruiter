@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
-import pdfParse from 'pdf-parse';
 import mammoth from 'mammoth';
 import { supabase } from '../../../../services/supabaseClient'; // Adjust the path as necessary
+import PDFExtraction from 'pdf-extraction';
 
 export async function POST(request) {
   try {
@@ -16,12 +16,14 @@ export async function POST(request) {
     const fileType = file.type;
     let resumeText = '';
 
-    if (fileType === 'application/pdf') {
-      const data = await pdfParse(Buffer.from(fileBuffer));
-      resumeText = data.text;
-    } else if (fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+    if (fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
       const result = await mammoth.extractRawText({ arrayBuffer: fileBuffer });
       resumeText = result.value;
+    } else if (fileType === 'application/pdf') {
+      // Use pdf-extraction for PDF parsing
+      const pdfExtractor = new PDFExtraction();
+      const { text } = await pdfExtractor.extractRawText({ buffer: Buffer.from(fileBuffer) });
+      resumeText = text;
     } else {
       return NextResponse.json({ error: 'Unsupported file type' }, { status: 400 });
     }
