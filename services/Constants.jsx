@@ -12,6 +12,11 @@ export const SideBarOptions = [
         path: '/schuduled-interview',
     },
     {
+        name: 'ATS Score Analyzer',
+        icon : PuzzleIcon,
+        path: '/ats-analyzer',
+    },
+    {
         name: 'All interviews',
         icon : List,
         path: '/all-interviews',
@@ -91,3 +96,30 @@ for hire or not with msg. Give me response in JSON format
   }
 }
 `
+
+export const ATS_PROMPT = `
+You are an expert ATS (Applicant Tracking System) analyzer.
+Based on the following resume and job description, provide a detailed analysis.
+
+Resume:
+{{resume}}
+
+Job Description:
+{{jobDescription}}
+
+Your task:
+1.  Calculate an ATS score out of 100.
+2.  Provide a short list of recommendations to improve the resume. Each recommendation should be a string in an array.
+3.  List skills to improve based on the job description. Each skill should be a string in an array.
+4.  Suggest upskilling resources (e.g., online courses, tutorials) for the identified skill gaps. Each resource should be a string in an array.
+
+Keep the recommendations, skills, and resources concise and in point form. Do not use markdown like **.
+
+Format your response in JSON format:
+{
+  "atsScore": <score_out_of_100>,
+  "recommendations": ["<recommendation_1>", "<recommendation_2>"],
+  "skills": ["<skill_1>", "<skill_2>"],
+  "upskillingResources": ["<resource_1>", "<resource_2>"]
+}
+`;
