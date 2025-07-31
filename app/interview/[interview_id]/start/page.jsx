@@ -1,34 +1,61 @@
 "use client";
 import { Loader2Icon, Mic, Phone, Timer } from 'lucide-react';
 import Image from 'next/image';
-import React, { useEffect, useState } from 'react'; // Removed useContext
+import React, { useEffect, useState } from 'react';
 import Vapi from '@vapi-ai/web';
 import AlertConfirm from './_components/AlertConfirm';
 import { toast } from 'sonner';
 import { supabase } from '@/services/supabaseClient';
 import { useParams, useRouter } from 'next/navigation';
-import axios from 'axios';
 
 function StartInterview() {
-  // Removed: const { interviewInfo } = useContext(InterviewDataContext);
-
-  // Create a local state for interview info for the resume-based flow
-  const [interviewInfo, setInterviewInfo] = useState({
-    username: 'Candidate', // Default username
-    userEmail: 'candidate@example.com', // Default email
-    interviewData: {
-      jobPosition: 'the specified role', // Default job position
-      questionList: '[]' // Provide an empty question list
-    }
-  });
-
+  const [interviewInfo, setInterviewInfo] = useState(null);
   const [activeUser, setActiveUser] = useState(false);
-  const [conversation, setConversation] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [vapi, setVapi] = useState(null);
   const { interview_id } = useParams();
   const router = useRouter();
   const [resumeData, setResumeData] = useState(null);
+  const [timeLeft, setTimeLeft] = useState(0);
+
+  useEffect(() => {
+    const fetchInterviewData = async () => {
+      if (!interview_id) return;
+  
+      const { data, error } = await supabase
+        .from('interviews')
+        .select('*, interviewData(*)')
+        .eq('id', interview_id)
+        .single();
+  
+      if (error) {
+        console.error('Error fetching interview data:', error);
+        toast.error('Failed to load interview details.');
+      } else if (data) {
+        setInterviewInfo(data);
+        const durationInMinutes = data.interviewData?.duration || 5; // Default to 5 minutes if not set
+        setTimeLeft(durationInMinutes * 60);
+      }
+    };
+    fetchInterviewData();
+  }, [interview_id]);
+  
+  // Countdown timer logic
+  useEffect(() => {
+    if (timeLeft > 0) {
+      const timer = setInterval(() => {
+        setTimeLeft(prevTime => prevTime - 1);
+      }, 1000);
+      return () => clearInterval(timer);
+    } else if (timeLeft === 0 && interviewInfo) {
+        stopInterview(); // Automatically end interview when time is up
+    }
+  }, [timeLeft, interviewInfo]);
+
+  const formatTime = (seconds) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+  };
 
   // Fetch resume data from Supabase
   useEffect(() => {
@@ -38,7 +65,7 @@ function StartInterview() {
       const { data, error } = await supabase
         .from('resumes')
         .select('resumeText')
-        .eq('interview_id', interview_id) // Corrected to use interview_id
+        .eq('interview_id', interview_id) 
         .single();
 
       if (error) {
@@ -46,7 +73,6 @@ function StartInterview() {
         toast.error('Failed to load resume data.');
       } else if (data) {
         setResumeData(data);
-        console.log('Fetched Resume Data:', data);
       }
     };
     fetchResumeData();
@@ -118,31 +144,30 @@ ${resumeData.resumeText}
   };
 
   const stopInterview = () => {
-    vapi?.stop();
-    toast("Interview Ended");
+    if (vapi) {
+        vapi.stop();
+        toast("Interview Ended");
+        // Redirect or show feedback after a short delay
+        setTimeout(() => {
+          router.push(`/interview/${interview_id}/completed`);
+        }, 2000);
+    }
   };
 
   // Listen for Vapi events (shortened for brevity)
   useEffect(() => {
     if (!vapi) return;
     const handleCallStart = () => { console.log('Call started'); toast("Call Connected"); };
-    const handleCallEnd = () => { console.log('Call ended'); toast("Interview Ended"); generateFeedback(); };
     vapi.on("call-start", handleCallStart);
-    vapi.on("call-end", handleCallEnd);
-    return () => { vapi.off("call-start", handleCallStart); vapi.off("call-end", handleCallEnd); };
+    return () => { vapi.off("call-start", handleCallStart); };
   }, [vapi]);
-
-  const generateFeedback = async () => {
-    // Feedback generation logic...
-  };
 
   return (
     <div className='p-10 md:p-20'>
-        {/* UI Elements */}
         <div className='flex justify-between items-center'>
             <h2 className='font-bold text-xl'>AI Interview Session</h2>
-            <span className='flex gap-2 items-center'>
-            <Timer /> 00:00:00
+            <span className='flex gap-2 items-center text-lg font-bold'>
+            <Timer /> {formatTime(timeLeft)}
             </span>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-7 mt-5">
@@ -166,9 +191,7 @@ ${resumeData.resumeText}
         <div className='flex items-center gap-5 justify-center mt-7'>
             <Mic className='h-12 w-12 p-3 bg-gray-500 text-white rounded-full cursor-pointer' />
             <AlertConfirm stopInterview={stopInterview}>
-            {!loading
-                ? <Phone className='h-12 w-12 p-3 bg-red-500 text-white rounded-full cursor-pointer' />
-                : <Loader2Icon className='animate-spin' />}
+                <Phone className='h-12 w-12 p-3 bg-red-500 text-white rounded-full cursor-pointer' />
             </AlertConfirm>
       </div>
     </div>
