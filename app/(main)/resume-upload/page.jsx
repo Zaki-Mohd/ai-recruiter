@@ -1,120 +1,93 @@
 "use client";
-import React, { useState, useRef } from 'react'; // Import useRef
+import React, { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { toast } from 'sonner';
+import { Loader2, Upload } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
-function ResumeUpload() {
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [uploadStatus, setUploadStatus] = useState('');
-  const [interviewLink, setInterviewLink] = useState(null);
+const ResumeUploadPage = () => {
+    const [selectedFile, setSelectedFile] = useState(null);
+    const [loading, setLoading] = useState(false);
+    const router = useRouter();
 
-  const fileInputRef = useRef(null); // Create a ref for the file input
+    const handleFileChange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            setSelectedFile(file);
+        }
+    };
 
-  const handleFileChange = (event) => {
-    console.log('handleFileChange triggered'); // Log when the function is called
-    console.log('Event target files:', event.target.files); // Log the files object
+    const handleUpload = async () => {
+        if (!selectedFile) {
+            toast.error("No file selected", {
+                description: "Please select a resume file to upload.",
+            });
+            return;
+        }
 
-    if (event.target.files && event.target.files.length > 0) {
-      console.log('File selected:', event.target.files[0]); // Log the selected file
-      setSelectedFile(event.target.files[0]);
-      setUploadStatus(''); // Clear status when a new file is selected
-      setInterviewLink(null); // Clear previous link
-    } else {
-      console.log('No file selected'); // Log if no file is selected
-      setSelectedFile(null);
-    }
-  };
+        setLoading(true);
+        const formData = new FormData();
+        formData.append('resume', selectedFile);
 
-  const handleUpload = async () => {
-    if (!selectedFile) {
-      setUploadStatus('Please select a file first!');
-      return;
-    }
+        try {
+            const response = await fetch('/api/resume/upload', {
+                method: 'POST',
+                body: formData,
+            });
 
-    setUploadStatus('Uploading...');
-    setInterviewLink(null); // Clear previous link
+            const data = await response.json();
 
-    const formData = new FormData();
-    formData.append('resume', selectedFile);
+            if (response.ok) {
+                toast.success("Resume uploaded successfully!", {
+                    description: `An interview has been created. Redirecting you to the interview page...`,
+                });
+                router.push(data.interviewLink);
+            } else {
+                toast.error("Upload failed", {
+                    description: data.error || "An unknown error occurred.",
+                });
+            }
+        } catch (error) {
+            console.error('Upload error:', error);
+            toast.error("Upload error", {
+                description: "There was a problem with the upload process.",
+            });
+        } finally {
+            setLoading(false);
+        }
+    };
 
-    try {
-      const response = await fetch('/api/resume/upload', {
-        method: 'POST',
-        body: formData,
-      });
+    return (
+        <div className="p-10 flex flex-col items-center justify-center text-center">
+            <h1 className="text-3xl font-bold">Upload Your Resume</h1>
+            <p className="text-gray-500 mt-2">
+                Upload a DOCX or PDF file to start a new resume-based interview.
+            </p>
 
-      const result = await response.json();
+            <div className="mt-8 p-8 border-2 border-dashed rounded-lg w-full max-w-md glassmorphism">
+                <div className="flex flex-col items-center justify-center space-y-4">
+                    <Upload className="w-16 h-16 text-gray-400" />
+                    <Input
+                        type="file"
+                        onChange={handleFileChange}
+                        className="file:text-primary file:font-bold"
+                        accept=".pdf,.docx"
+                    />
+                    {selectedFile && <p className="text-sm text-gray-400">Selected file: {selectedFile.name}</p>}
+                </div>
+            </div>
 
-      if (response.ok) {
-        setUploadStatus(`File uploaded successfully!`);
-        setInterviewLink(result.interviewLink); // Set the generated link
-        console.log('Upload successful:', result);
-      } else {
-        setUploadStatus(`Upload failed: ${result.error}`);
-        setInterviewLink(null); // Clear link on failure
-        console.error('Upload failed:', result);
-      }
-    } catch (error) {
-      setUploadStatus(`An error occurred during upload: ${error.message}`);
-      setInterviewLink(null); // Clear link on error
-      console.error('Upload error:', error);
-    }
-  };
-
-  // Function to trigger the file input click
-  const triggerFileInput = () => {
-    fileInputRef.current.click();
-  };
-
-  return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold mb-4">Upload Your Resume</h1>
-      <div 
-        className="flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg p-8 cursor-pointer hover:border-blue-500"
-        onClick={triggerFileInput} // Trigger file input on click
-      >
-        {/* Hidden file input */}
-        <input 
-          type="file" 
-          accept=".pdf,.doc,.docx" 
-          onChange={handleFileChange} 
-          className="hidden" // Hide the input
-          ref={fileInputRef} // Assign the ref
-        />
-        
-        {/* Display text based on whether a file is selected */}
-        {selectedFile ? (
-          <p>Selected file: {selectedFile.name}</p>
-        ) : (
-          <p>Drag and drop a resume here, or click to select a file (PDF or DOCX)</p>
-        )}
-
-      </div>
-
-      <div className="flex justify-center mt-4">
-        <button 
-            onClick={handleUpload} 
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            disabled={!selectedFile || uploadStatus === 'Uploading...'} // Disable if no file selected or uploading
-          >
-            {uploadStatus === 'Uploading...' ? 'Uploading...' : 'Upload Resume'}
-          </button>
-      </div>
-
-      {uploadStatus && <p className="mt-4 text-center text-blue-600">{uploadStatus}</p>}
-      {interviewLink && (
-        <div className="mt-4 text-center">
-          <h2 className="text-xl font-semibold">Your Interview Link:</h2>
-          <a 
-            href={interviewLink} 
-            target="_blank" 
-            rel="noopener noreferrer" 
-            className="text-blue-500 hover:underline"
-          >
-            {interviewLink}
-          </a>
+            <Button
+                onClick={handleUpload}
+                disabled={loading || !selectedFile}
+                className="mt-6"
+            >
+                {loading && <Loader2 className="animate-spin mr-2" />}
+                {loading ? "Analyzing..." : "Start Interview"}
+            </Button>
         </div>
-      )}
-    </div>
-  );
-}
+    );
+};
 
-export default ResumeUpload;
+export default ResumeUploadPage;

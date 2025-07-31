@@ -1,8 +1,6 @@
 import { NextResponse } from 'next/server';
 import mammoth from 'mammoth';
-import { supabase } from '../../../../services/supabaseClient';
 import extract from 'pdf-extraction';
-import { v4 as uuidv4 } from 'uuid';
 
 export async function POST(request) {
   try {
@@ -27,28 +25,7 @@ export async function POST(request) {
       return NextResponse.json({ error: 'Unsupported file type. Please upload a PDF or DOCX file.' }, { status: 400 });
     }
 
-    // Generate a unique interview_id
-    const interview_id = uuidv4();
-
-    // Save the resumeText and generated interview_id to Supabase
-    const { data, error } = await supabase
-      .from('resumes')
-      .insert([{ resumeText: resumeText, interview_id: interview_id }])
-      .select();
-
-    if (error) {
-      console.error('Error saving resume to Supabase:', error);
-      return NextResponse.json({ error: 'Failed to save resume data' }, { status: 500 });
-    }
-
-    // Construct the interview link using the generated interview_id
-    const interviewLink = `/interview/${interview_id}/start`;
-
-    return NextResponse.json({ 
-      message: 'File uploaded, parsed, and saved successfully.', 
-      fileName: file.name, 
-      interviewLink 
-    });
+    return NextResponse.json({ resumeText });
   } catch (error) {
     console.error('Error processing file:', error);
     return NextResponse.json({ error: 'Failed to process file' }, { status: 500 });
