@@ -6,7 +6,7 @@ function DashboardLayoyt({children}) {
   return (
     <DashboardProvider>
       {/* <WelcomeContainer /> */}
-        <div className='p-10'>{children}</div>
+        <div className='p-10 animate-fade-in-up'>{children}</div>
     </DashboardProvider>
     
   )
