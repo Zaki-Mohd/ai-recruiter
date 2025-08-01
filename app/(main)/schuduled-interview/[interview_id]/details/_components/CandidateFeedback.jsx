@@ -26,8 +26,8 @@ function CandidateFeedbackDialog({ candidate }) {
 
   // Handle all possible cases for recommendation message
   const recommendationMessage = 
-    feedback?.RecommendationMessage || 
-    feedback?.recommendationMessage || 
+    feedback?.RecommendationMsg || 
+    feedback?.recommendationMsg || 
     feedback?.["Recommendation Message"] || 
     "No recommendation message provided";
 
