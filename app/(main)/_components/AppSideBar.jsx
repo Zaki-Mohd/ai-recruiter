@@ -26,7 +26,7 @@ export function AppSidebar() {
     <Sidebar>
       <SidebarHeader className="flex items-center justify-center mt-5 p-4 bg-white-100">
         
-        <Image src={"/logo.png"} alt="logo" width={400} height={80} className="w-[100px] h-[100px] rounded-full" />
+        <Image src={"/logo.png"} alt="logo" width={400} height={80} priority className="w-[100px] h-[100px] rounded-full" />
         <Button className="mt-2 w-full"><Plus/>Create New Interview</Button>
         </SidebarHeader>
       
