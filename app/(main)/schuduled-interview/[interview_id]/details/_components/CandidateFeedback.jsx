@@ -72,7 +72,7 @@ function CandidateFeedback({ candidate }) {
                             <div className={`p-5 mt-10 flex items-center justify-between rounded-md ${feedback?.recommendation === false ? 'bg-red-100' : 'bg-green-100'}`}>
                 <div>
                   <h2 className={`font-bold ${feedback?.recommendation === false ? 'text-red-700' : 'text-green-700'}`}>Recommendation Msg :</h2>
-                  <p className={`${feedback?.recommendation === false ? 'text-red-700' : 'text-green-700'}`}>{feedback?.recommendationMsg}</p>
+                  <p className={`${feedback?.recommendation === false ? 'text-red-700' : 'text-green-700'}`}>{feedback?.RecommendationMsg}</p>
                 </div>
                 <Button className={`${feedback?.recommendation === false ? 'bg-red-700' : 'bg-green-700'}`}>Send Msg</Button>
               </div>
