@@ -16,7 +16,7 @@ const login = () => {
     const { data, error } = await supabase.auth.signInWithOAuth({
     provider: 'google',
      options: {
-    redirectTo: `${process.env.NEXT_PUBLIC_HOST_URL}/dashboard` 
+    redirectTo: `http://ai-recruiter-azure.vercel.app/dashboard` 
   }
 })
 if (error) {  

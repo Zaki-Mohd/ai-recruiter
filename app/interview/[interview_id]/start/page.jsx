@@ -66,7 +66,7 @@ function StartInterview() {
           .eq('interview_id', interview_id)
           .single();
 
-          
+
         
         if (resumeError) {
           toast.error('Could not load the resume for this interview.');
@@ -191,6 +191,9 @@ Your task is to ask the candidate the following questions one by one.
     vapi?.stop();
   };
 
+
+
+
   useEffect(() => {
     if (!vapi) return;
     const handleCallStart = () => { 
@@ -199,6 +202,7 @@ Your task is to ask the candidate the following questions one by one.
     };
     const handleCallEnd = () => { 
         toast("Interview Ended"); 
+
         setIsCallActive(false); 
     };
     vapi.on("call-start", handleCallStart);
@@ -208,6 +212,11 @@ Your task is to ask the candidate the following questions one by one.
       vapi.off("call-end", handleCallEnd);
     };
   }, [vapi]);
+
+  
+    
+
+
 
   if (loading) {
     return <div className="p-10 flex justify-center items-center h-screen"><Loader2Icon className="animate-spin h-8 w-8" /> <span className="ml-2">Loading Interview...</span></div>;
