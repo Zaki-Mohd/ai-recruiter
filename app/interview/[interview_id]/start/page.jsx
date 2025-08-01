@@ -61,10 +61,12 @@ function StartInterview() {
       if (isResumeType) {
         setIsResumeInterview(true);
         const { data: resume, error: resumeError } = await supabase
-          .from('Resumes')
+          .from('resumes')
           .select('resumeText')
           .eq('interview_id', interview_id)
           .single();
+
+          
         
         if (resumeError) {
           toast.error('Could not load the resume for this interview.');
