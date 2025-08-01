@@ -217,7 +217,7 @@ ${candidate?.userEmail || "No Email"}`,
                       {feedback?.Recommendation || 'Recommendation to Hire'}
                     </h2>
                     <p className="mt-2 whitespace-pre-wrap text-gray-700">
-                      {RecommendationMessage}
+                      {recommendationMessage}
                     </p>
                   </div>
                   <div className="flex flex-col gap-2 ml-4">
