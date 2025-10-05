@@ -18,7 +18,7 @@ export async function POST(request) {
     let resumeText = '';
 
     if (fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
-      const result = await mammoth.extractRawText({ arrayBuffer: fileBuffer });
+      const result = await mammoth.extractRawText({ buffer: Buffer.from(fileBuffer) });
       resumeText = result.value;
     } else if (fileType === 'application/pdf') {
       const data = await extract(Buffer.from(fileBuffer));
