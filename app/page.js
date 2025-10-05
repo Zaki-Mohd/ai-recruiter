@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 
 
 export default function Home() {
-  const { user } = useUser();
+  // const { user } = useUser();
   const router = useRouter();
  const [mounted, setMounted] = useState(false);
 
@@ -26,7 +26,7 @@ export default function Home() {
   };
    if (!mounted) return null;
   return (
-    <Provider>
+    // <Provider>
       <div className="min-h-screen bg-gradient-to-b from-white to-blue-50">
         {/* Navbar */}
         <nav className="flex justify-between items-center px-8 py-4">
@@ -113,7 +113,7 @@ export default function Home() {
           </div>
         </section>
       </div>
-    </Provider>
+    // </Provider>
   );
 }
 

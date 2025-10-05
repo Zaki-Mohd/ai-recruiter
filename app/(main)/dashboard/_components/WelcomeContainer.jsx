@@ -8,7 +8,7 @@ function WelcomeContainer() {
   console.log("User in WelcomeContainer:");
 
   return (
-    <div className='bg-gray-200 p-3 rounded-xl flex items-center justify-between'>
+    <div className='bg-gray-200 p-3 rounded-xl flex items-center justify-between dark:text-gray-800'>
       <div >
       {user ? (
         <h1 className='text-lg font-bold'>Welcome Back, {user.name || user.email || "User"}!</h1>
