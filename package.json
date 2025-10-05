@@ -34,6 +34,7 @@
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-webcam": "^7.2.0",
+    "recharts": "^3.2.1",
     "sonner": "^2.0.5",
     "tailwind-merge": "^3.3.1",
     "uuid": "^11.1.0"

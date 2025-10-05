@@ -1,15 +1,13 @@
 import React from 'react'
 import DashboardProvider from './provider'
-import WelcomeContainer from './dashboard/_components/WelcomeContainer'
 
-function DashboardLayoyt({children}) {
+function DashboardLayout({children}) {
   return (
     <DashboardProvider>
-      {/* <WelcomeContainer /> */}
-        <div className='p-10 animate-fade-in-up'>{children}</div>
+        {/* The animate class is now directly on the children wrapper */}
+        <div className='animate-fade-in-up'>{children}</div>
     </DashboardProvider>
-    
   )
 }
 
-export default DashboardLayoyt
+export default DashboardLayout;

@@ -1,25 +1,51 @@
 "use client";
 import { useUser } from '@/app/provider';
-import Image from 'next/image';
 import React from 'react';
+import { Award, Briefcase, Star } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 function WelcomeContainer() {
   const { user } = useUser();
-  console.log("User in WelcomeContainer:");
 
   return (
-    <div className='bg-gray-200 p-3 rounded-xl flex items-center justify-between'>
-      <div >
-      {user ? (
-        <h1 className='text-lg font-bold'>Welcome Back, {user.name || user.email || "User"}!</h1>
-        
-        
-      ) : (
-        <h1>Welcome, Guest!</h1>
-      )}
-      <h2 className='text-grey'>AI-Driven Interviews, Hassel free hiring</h2>
+    <div>
+      <h1 className='text-2xl font-bold'>
+        Welcome Back, {user?.name?.split(' ')[0] || "User"}!
+      </h1>
+      <p className='text-gray-500'>Here's a snapshot of your recruiting activity.</p>
+
+      <div className="grid gap-4 md:grid-cols-3 mt-4">
+        <Card className="animate-fade-in-up" style={{ animationDelay: '100ms' }}>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Total Interviews</CardTitle>
+            <Briefcase className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">12</div>
+            <p className="text-xs text-muted-foreground">+2 from last month</p>
+          </CardContent>
+        </Card>
+        <Card className="animate-fade-in-up" style={{ animationDelay: '200ms' }}>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Avg. Candidate Score</CardTitle>
+            <Star className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">8.2/10</div>
+            <p className="text-xs text-muted-foreground">-0.5 from last month</p>
+          </CardContent>
+        </Card>
+        <Card className="animate-fade-in-up" style={{ animationDelay: '300ms' }}>
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium">Hired Candidates</CardTitle>
+            <Award className="h-4 w-4 text-muted-foreground" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">3</div>
+            <p className="text-xs text-muted-foreground">1 this month</p>
+          </CardContent>
+        </Card>
       </div>
-      {user && <Image src={user?.picture} alt='userAvatar' width={40} height={40} className='rounded-full'></Image>}
     </div>
   );
 }
