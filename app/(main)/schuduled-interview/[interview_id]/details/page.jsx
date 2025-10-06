@@ -16,14 +16,27 @@ function InterviewDetails() {
     },[user])
 
     const getinterviewdetail = async()=>{
-              const res = await supabase.from('Interviews')
-                    .select('jobPosition,jobDescription,type,questionList,duration,interview_id,created_at,interview-feedback(userEmail,userName,feedback,created_at)')
-                    .eq('userEmail',user?.email)
+        const res = await supabase.from('interviews')
+          // Request lowercase columns from DB
+          .select('jobposition,jobdescription,type,questionlist,duration,interview_id,created_at,interview-feedback(useremail,userName,feedback,created_at)')
+          .eq('useremail',user?.email)
                     .eq('interview_id',interview_id)
                     .order('id',{ascending:false})  
 
                     console.log(res);
-                    setinterviewDetail(res?.data[0]); 
+                    const row = res?.data?.[0] || null;
+                    const normalized = row ? {
+                      jobPosition: row.jobposition || row.jobPosition || null,
+                      jobDescription: row.jobdescription || row.jobDescription || null,
+                      questionList: row.questionlist || row.questionList || null,
+                      type: row.type || null,
+                      duration: row.duration || null,
+                      interview_id: row.interview_id || null,
+                      created_at: row.created_at || null,
+                      'interview-feedback': row['interview-feedback'] || row['interview-Feedback'] || null,
+                    } : null;
+
+                    setinterviewDetail(normalized); 
                     // setinteviewList(res.data );
     }
 

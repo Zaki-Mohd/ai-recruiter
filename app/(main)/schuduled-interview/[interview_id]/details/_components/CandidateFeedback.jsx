@@ -13,13 +13,13 @@ import { Progress } from "@/components/ui/progress";
 function CandidateFeedbackDialog({ candidate }) {
   // Safely extract and normalize feedback data
   const feedback = candidate?.feedback?.feedback || {};
-  const rating = feedback?.rating || {
-    TechnicalSkills: 0,
-    Communication: 0,
-    ProblemSolving: 0,
-    Experience: 0,
-    Behavioral: 0,
-    Thinking: 0
+  const rating = feedback?.rating || feedback?.feedback?.rating || {
+    technicalSkills: 0,
+    communication: 0,
+    problemSolving: 0,
+    experience: 0,
+    behavioral: 0,
+    thinking: 0
   };
 
   
@@ -28,11 +28,11 @@ function CandidateFeedbackDialog({ candidate }) {
   const recommendationMessage = 
     feedback?.RecommendationMsg || 
     feedback?.recommendationMsg || 
-    feedback?.["Recommendation Message"] || 
+    feedback?.RecommendationMsg || 
     "No recommendation message provided";
 
   // Handle summary data
-  const summaryText = feedback?.summery || feedback?.summary || "";
+  const summaryText = feedback?.summary || feedback?.summery || "";
   const summaryArray = Array.isArray(summaryText) 
     ? summaryText 
     : typeof summaryText === 'string' 
@@ -56,7 +56,9 @@ function CandidateFeedbackDialog({ candidate }) {
   };
 
   // Email templates
-  const emailTemplates = {
+    // Normalize email field from either casing
+    const candidateEmail = candidate?.userEmail || candidate?.useremail || 'No Email';
+    const emailTemplates = {
     selected: `Subject: Congratulations! You've been selected for further evaluation
 
 Dear ${candidate?.userName || "Candidate"},
@@ -79,7 +81,7 @@ Congratulations again!
 
 Best regards,
 ${candidate?.userName || "Candidate"}
-${candidate?.userEmail || "No Email"}`,
+${candidateEmail}`,
 
     rejected: `Subject: Update on Your Application for ${candidate?.jobPosition || "the position"}
 
@@ -103,7 +105,7 @@ We wish you the best in your job search and professional endeavors.
 
 Best regards,
 ${candidate?.userName || "Candidate"}
-${candidate?.userEmail || "No Email"}`,
+${candidateEmail}`,
 
     reevaluate: `Subject: Request for Additional Evaluation for ${candidate?.jobPosition || "the position"}
 
@@ -127,12 +129,12 @@ We appreciate your time and interest, and we look forward to continuing the conv
 
 Best regards,
 ${candidate?.userName || "Candidate"}
-${candidate?.userEmail || "No Email"}`,
+${candidateEmail}`,
   };
 
   // Function to open email client with template
   const handleEmailAction = (templateType) => {
-    const email = candidate?.userEmail || '';
+  const email = candidateEmail === 'No Email' ? '' : candidateEmail;
     const subject = emailTemplates[templateType].split('\n')[0].replace('Subject: ', '');
     const body = emailTemplates[templateType].split('\n').slice(1).join('\n');
     
@@ -162,7 +164,7 @@ ${candidate?.userEmail || "No Email"}`,
                   <div>
                     <h2 className="font-bold">{candidate?.userName || 'No Name'}</h2>
                     <h2 className="text-gray-500 text-sm">
-                      {candidate?.userEmail || 'No Email'}
+                      {candidateEmail}
                     </h2>
                   </div>
                 </div>

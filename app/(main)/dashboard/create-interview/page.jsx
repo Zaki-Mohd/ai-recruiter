@@ -12,25 +12,36 @@ import { useUser } from '@/app/provider';
 function CreateInterview() {
     const router = useRouter();
     const [step, setstep] = useState(1);
-    const [formData, setformData] = useState();
+    const [formData, setformData] = useState({ type: [] });
     const [interview_id, setinterview_id] = useState();
     const {user} = useUser();
-    const onHandleInputChange =(field,value)=>{
-        setformData(prev=>({
-            ...prev,
-            [field]:value
-        }))
-        console.log("Form Data:", formData);
-    }
+    const onHandleInputChange = (field, value) => {
+        setformData(prev => {
+            const next = { ...(prev || {}), [field]: value };
+            console.log('Form Data:', next);
+            return next;
+        });
+    };
+
+    const onToggleType = (type) => {
+        setformData(prev => {
+            const prevTypes = (prev?.type) || [];
+            const exists = prevTypes.includes(type);
+            const nextTypes = exists ? prevTypes.filter(t => t !== type) : [...prevTypes, type];
+            const next = { ...(prev || {}), type: nextTypes };
+            console.log('Form Data (toggle type):', next);
+            return next;
+        });
+    };
 
     const onGoToNext=()=>{
-        if(user?.credits<=0){
-            toast("Please Add Credits")
+        // Allow generating questions even when user has no credits.
+        // Credits will be enforced when finalizing the interview (onFinish in QuestionsList).
+
+        // Validate required fields. Ensure at least one interview type is selected.
+        if (!formData?.jobPosition || !formData?.jobDescription || !formData?.duration || !(formData?.type && formData.type.length > 0)) {
+            toast('Please enter all details!');
             return;
-        }
-        if(!formData?.jobPosition || !formData?.jobDescription || !formData?.duration || !formData?.type ){
-            toast('Please enter all details!')
-            return ;
         }
         setstep(step+1);
     }
@@ -49,9 +60,13 @@ function CreateInterview() {
         
         </div>
         <Progress value={step * 33} className="my-5" />
-        { step==1?<FromContainer onHandleInputChange={onHandleInputChange}
-        GoToNext={()=>onGoToNext()}
-        />
+                { step==1?
+                    <FromContainer
+                        onHandleInputChange={onHandleInputChange}
+                        GoToNext={()=>onGoToNext()}
+                        selectedTypes={formData.type || []}
+                        onToggleType={onToggleType}
+                    />
         :step==2?<QuestionsList formData={formData} onCreateLink={(interview_id)=>onCreateLink(interview_id)}/>:
         step==3? <InterviewLink interview_id={interview_id}
         formData={formData}

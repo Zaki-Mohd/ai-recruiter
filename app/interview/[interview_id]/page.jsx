@@ -32,14 +32,26 @@ useEffect(()=>{
     const getInterviewDetails =async()=>{
         setloading(true);
         try{
+            // Query lowercase column names (Postgres lowercases unquoted identifiers)
+            let { data: Interviews, error } = await supabase
+                .from('interviews')
+                .select('jobposition,jobdescription,duration,type')
+                .eq('interview_id', interview_id);
 
-        
-        let { data: Interviews, error } = await supabase
-  .from('Interviews')
-  .select("jobPosition,jobDescription,duration,type")
-  .eq('interview_id',interview_id)
-  console.log(Interviews[0])
-  setinterviewdata(Interviews[0]);
+            console.log(Interviews?.[0]);
+
+            // Normalize DB columns (lowercase) to camelCase for UI consumption
+            const row = Interviews?.[0] || null;
+            const normalized = row
+                ? {
+                        jobPosition: row.jobposition || row.jobPosition || null,
+                        jobDescription: row.jobdescription || row.jobDescription || null,
+                        duration: row.duration || null,
+                        type: row.type || null,
+                    }
+                : null;
+
+            setinterviewdata(normalized);
   setloading(false);
 
   if(Interviews?.length==0){
@@ -57,17 +69,28 @@ const onJoinInterview = async()=>{
     setloading(true);
 
         let { data: Interviews, error } = await supabase
-  .from('Interviews')
-  .select('*')
-  .eq('interview_id',interview_id);
+            .from('interviews')
+            .select('*')
+            .eq('interview_id', interview_id);
 
-  console.log(Interviews[0]);
-    setinterviewInfo({
-        username:username,
-        userEmail:userEmail,
-        interviewData:Interviews[0] /////////////////////////////////////////////////////////////////////////////////
+        const row = Interviews?.[0] || null;
+        const normalized = row
+            ? {
+                    ...row,
+                    // normalize common fields to camelCase for downstream code
+                    jobPosition: row.jobposition || row.jobPosition || null,
+                    jobDescription: row.jobdescription || row.jobDescription || null,
+                    questionList: row.questionlist || row.questionList || null,
+                }
+            : null;
 
-    });
+        console.log(normalized);
+
+        setinterviewInfo({
+            username: username,
+            userEmail: userEmail,
+            interviewData: normalized,
+        });
 
  
     router.push('/interview/'+interview_id+'/start');

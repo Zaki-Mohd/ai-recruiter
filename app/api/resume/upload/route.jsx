@@ -50,12 +50,14 @@ export async function POST(request) {
     // IMPORTANT: This is the critical step that was missing.
     // Make sure 'Interviews' is the exact table name.
     const { error: interviewError } = await supabase
-      .from('Interviews')
+      .from('interviews')
+      // Insert lowercase column names to match Postgres unquoted identifiers
       .insert([{
         interview_id: interview_id,
         type: 'resume-based',         // Set the type for the interview page
-        jobPosition: 'Resume Review',    // Provide a default job position
-        duration: '5',                  // Provide a default duration in minutes
+        jobposition: 'Resume Review', // lowercase column name
+        jobdescription: 'Resume Review',
+        duration: '5',                // Provide a default duration in minutes
         // Add any other required fields from your 'Interviews' table here, like a user ID
       }]);
 

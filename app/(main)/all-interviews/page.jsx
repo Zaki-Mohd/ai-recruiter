@@ -24,9 +24,9 @@ function page() {
     const getInterviewList =async()=>{
 
         let { data: Interviews, error } = await supabase
-        .from('Interviews')
+        .from('interviews')
         .select('*')
-        .eq('userEmail',user?.email)
+  .eq('useremail',user?.email)
         .order('id',{ascending:false})
         
 

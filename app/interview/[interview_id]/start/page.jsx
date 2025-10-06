@@ -24,8 +24,8 @@ function StartInterview() {
       if (!interview_id) return;
       setLoading(true);
 
-      const { data: interviewDetails, error: interviewError } = await supabase
-        .from('Interviews')
+      const { data: interviewDetails, error: interviewError } = await supabase
+      .from('interviews')
         .select('*')
         .eq('interview_id', interview_id)
         .single();
@@ -192,26 +192,94 @@ Your task is to ask the candidate the following questions one by one.
   };
 
 
+  // Feedback form state and handlers
+  const [showFeedbackForm, setShowFeedbackForm] = useState(false);
+  const [ratings, setRatings] = useState({
+    technicalSkills: 0,
+    communication: 0,
+    problemSolving: 0,
+    experience: 0,
+    behavioral: 0,
+    thinking: 0,
+  });
+  const [summary, setSummary] = useState('');
+  const [recommendation, setRecommendation] = useState('');
+  const [submittingFeedback, setSubmittingFeedback] = useState(false);
+
+  function handleRatingChange(key, value) {
+    setRatings(prev => ({ ...prev, [key]: Math.max(0, Math.min(10, Number(value) || 0)) }));
+  }
+
+  async function submitFeedback() {
+    if (!interviewInfo) return;
+    setSubmittingFeedback(true);
+    try {
+      // Normalize rating keys and compute overall score
+      const standardizedRating = {
+        technicalSkills: Number(ratings.technicalSkills) || 0,
+        communication: Number(ratings.communication) || 0,
+        problemSolving: Number(ratings.problemSolving) || 0,
+        experience: Number(ratings.experience) || 0,
+        behavioral: Number(ratings.behavioral) || 0,
+        thinking: Number(ratings.thinking) || 0,
+      };
+      const ratingValues = Object.values(standardizedRating);
+      const overallScore = ratingValues.length > 0 ? Math.round(ratingValues.reduce((a,b)=>a+b,0) / ratingValues.length) : 0;
+
+      const payload = {
+        feedback: {
+          feedback: {
+            rating: standardizedRating,
+            overallScore,
+            summary: summary,
+            Recommendation: recommendation || (overallScore >= 6 ? 'Recommended' : 'Not Recommended'),
+            RecommendationMsg: recommendation,
+          }
+        },
+        useremail: interviewInfo?.userEmail || interviewInfo?.useremail || null,
+        userName: interviewInfo?.username || interviewInfo?.userName || null,
+        interview_id: interview_id,
+      };
+
+      const { data, error } = await supabase.from('interview-feedback').insert([payload]);
+      if (error) {
+        console.error('Insert feedback error:', error);
+        toast.error('Could not save feedback');
+      } else {
+        toast.success('Feedback saved');
+        setShowFeedbackForm(false);
+      }
+    } catch (e) {
+      console.error(e);
+      toast.error('Unexpected error saving feedback');
+    } finally {
+      setSubmittingFeedback(false);
+    }
+  }
 
 
-  useEffect(() => {
-    if (!vapi) return;
-    const handleCallStart = () => { 
-        toast("Call Connected"); 
-        setIsCallActive(true); 
-    };
-    const handleCallEnd = () => { 
-        toast("Interview Ended"); 
 
-        setIsCallActive(false); 
-    };
-    vapi.on("call-start", handleCallStart);
-    vapi.on("call-end", handleCallEnd);
-    return () => {
-      vapi.off("call-start", handleCallStart);
-      vapi.off("call-end", handleCallEnd);
-    };
-  }, [vapi]);
+
+  useEffect(() => {
+    if (!vapi) return;
+    const handleCallStart = () => { 
+        toast("Call Connected"); 
+        setIsCallActive(true); 
+    };
+    const handleCallEnd = () => { 
+        toast("Interview Ended"); 
+
+        setIsCallActive(false); 
+        // open feedback form so user can provide ratings after the interview
+        setShowFeedbackForm(true);
+    };
+    vapi.on("call-start", handleCallStart);
+    vapi.on("call-end", handleCallEnd);
+    return () => {
+      vapi.off("call-start", handleCallStart);
+      vapi.off("call-end", handleCallEnd);
+    };
+  }, [vapi]);
 
   
     
@@ -253,7 +321,7 @@ Your task is to ask the candidate the following questions one by one.
                 </div>
             </div>
 
-            <div className='flex items-center gap-8 justify-center mt-12'>
+            <div className='flex items-center gap-8 justify-center mt-12'>
                 <div className='p-4 bg-gray-200 rounded-full cursor-not-allowed'>
                     <Mic className='h-12 w-12 text-gray-400' />
                 </div>
@@ -264,6 +332,57 @@ Your task is to ask the candidate the following questions one by one.
                     </div>
                 </AlertConfirm>
             </div>
+            {/* Feedback form shown after interview ends */}
+            {showFeedbackForm && (
+              <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4">
+                <div className="bg-white rounded-lg p-6 max-w-2xl w-full shadow-xl">
+                  <h3 className="text-lg font-semibold">Post-interview Feedback</h3>
+                  <p className="text-sm text-gray-600">Add numeric ratings (0-10) and a short summary.</p>
+                  <div className="mt-4 grid grid-cols-2 gap-4">
+                    <label className="flex flex-col">
+                      Technical Skills
+                      <input type="number" min="0" max="10" value={ratings.technicalSkills} onChange={(e)=>handleRatingChange('technicalSkills', e.target.value)} className="mt-1 border rounded px-2 py-1" />
+                    </label>
+                    <label className="flex flex-col">
+                      Communication
+                      <input type="number" min="0" max="10" value={ratings.communication} onChange={(e)=>handleRatingChange('communication', e.target.value)} className="mt-1 border rounded px-2 py-1" />
+                    </label>
+                    <label className="flex flex-col">
+                      Problem Solving
+                      <input type="number" min="0" max="10" value={ratings.problemSolving} onChange={(e)=>handleRatingChange('problemSolving', e.target.value)} className="mt-1 border rounded px-2 py-1" />
+                    </label>
+                    <label className="flex flex-col">
+                      Experience
+                      <input type="number" min="0" max="10" value={ratings.experience} onChange={(e)=>handleRatingChange('experience', e.target.value)} className="mt-1 border rounded px-2 py-1" />
+                    </label>
+                    <label className="flex flex-col">
+                      Behavioral
+                      <input type="number" min="0" max="10" value={ratings.behavioral} onChange={(e)=>handleRatingChange('behavioral', e.target.value)} className="mt-1 border rounded px-2 py-1" />
+                    </label>
+                    <label className="flex flex-col">
+                      Thinking
+                      <input type="number" min="0" max="10" value={ratings.thinking} onChange={(e)=>handleRatingChange('thinking', e.target.value)} className="mt-1 border rounded px-2 py-1" />
+                    </label>
+                  </div>
+                  <div className="mt-4">
+                    <label className="flex flex-col">
+                      Summary
+                      <textarea value={summary} onChange={(e)=>setSummary(e.target.value)} className="mt-1 border rounded px-2 py-2 h-24" />
+                    </label>
+                  </div>
+                  <div className="mt-4">
+                    <label className="flex flex-col">
+                      Recommendation message (optional)
+                      <input value={recommendation} onChange={(e)=>setRecommendation(e.target.value)} className="mt-1 border rounded px-2 py-1" />
+                    </label>
+                  </div>
+                  <div className="mt-4 flex justify-end gap-3">
+                    <button onClick={()=>setShowFeedbackForm(false)} className="px-4 py-2 rounded border">Cancel</button>
+                    <button disabled={submittingFeedback} onClick={submitFeedback} className="px-4 py-2 rounded bg-primary text-white">{submittingFeedback ? 'Saving...' : 'Save Feedback'}</button>
+                  </div>
+                </div>
+              </div>
+            )}
         </div>
     </div>
   );

@@ -17,15 +17,25 @@ function ScheduledInterview() {
     },[user])
 
 
-    const getInterviewList = async()=>{
-        const res = await supabase.from('Interviews')
-        .select('jobPosition,duration,interview_id,interview-feedback(userEmail)')
-        .eq('userEmail',user?.email)
-        .order('id',{ascending:false})
-        
-        console.log(res);
-        setinteviewList(res.data );
-    }
+  const getInterviewList = async()=>{
+    const res = await supabase.from('interviews')
+    // request lowercase columns from DB
+    .select('jobposition,duration,interview_id,interview-feedback(useremail)')
+    .eq('useremail',user?.email)
+    .order('id',{ascending:false})
+
+    console.log(res);
+    const rows = res.data || [];
+    // normalize each row to camelCase for the UI
+    const normalized = rows.map(r => ({
+      ...r,
+      jobPosition: r.jobposition || r.jobPosition || null,
+      duration: r.duration || null,
+      interview_id: r.interview_id || r.interviewId || null,
+    }));
+
+    setinteviewList(normalized);
+  }
 
 
   return (
