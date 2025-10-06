@@ -15,7 +15,7 @@ import React from "react";
 import { toast } from "sonner";
 
 function InterviewLink({ interview_id, formData }) {
-  const url = process.env.NEXT_PUBLIC_HOST_URL + "/interview" + interview_id;
+  const url = process.env.NEXT_PUBLIC_HOST_URL + "/interview/" + interview_id;
   const GetInterviewUrl = () => {
     return url;
   };
