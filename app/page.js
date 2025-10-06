@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 
 
 export default function Home() {
-  // const { user } = useUser();
+  const { user } = useUser(); 
   const router = useRouter();
  const [mounted, setMounted] = useState(false);
 
