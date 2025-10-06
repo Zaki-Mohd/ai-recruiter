@@ -16,7 +16,7 @@ import { Plus } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation";
-
+import { ThemeToggle } from "../dashboard/_components/ThemeToggle";
 export function AppSidebar() {
   const path = usePathname();
   const isActive = (optionPath) => {
@@ -28,6 +28,10 @@ export function AppSidebar() {
         
         <Image src={"/logo.png"} alt="logo" width={400} height={80} priority className="w-[100px] h-[100px] rounded-full" />
         <Button className="mt-2 w-full"><Plus/>Create New Interview</Button>
+  <div className="flex items-center justify-between border-t pt-4 mt-4 mb-2">
+            <p className='text-gray-600 dark:text-gray-400 mr-2'>Switch Theme</p>
+            <ThemeToggle />
+        </div>
         </SidebarHeader>
       
         <SidebarContent>
@@ -36,8 +40,8 @@ export function AppSidebar() {
               <SidebarMenuItem key={index} className='p-1'>
                 <SidebarMenuButton asChild className={`p-5 ${path == option.path && `bg-blue-50`}`} >
                   <Link href={option.path}>
-                  <option.icon className={`${path == option.path && 'text-primary'}`}/>
-                  <span className={`text-[16px] font-medium ${path == option.path && 'text-primary'}`}>{option.name}</span>
+                  <option.icon className={`${path == option.path ? 'text-black' : ''}`}/>
+                  <span className={`text-[16px] font-medium ${path == option.path ? 'text-black' : ''}`}>{option.name}</span>
                   </Link>
                 </SidebarMenuButton>
 
