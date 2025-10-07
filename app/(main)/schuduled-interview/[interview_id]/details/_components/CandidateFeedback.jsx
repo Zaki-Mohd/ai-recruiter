@@ -82,8 +82,7 @@ Our team will be in touch shortly to schedule the next phase. In the meantime, f
 Congratulations again!
 
 Best regards,
-${candidate?.userName || "Candidate"}
-${candidate?.userEmail || "No Email"}`,
+AI Recruiter Team`,
 
     rejected: `Subject: Update on Your Application for ${candidate?.jobPosition || "the position"}
 
@@ -106,8 +105,7 @@ After careful consideration, we've decided to move forward with other candidates
 We wish you the best in your job search and professional endeavors.
 
 Best regards,
-${candidate?.userName || "Candidate"}
-${candidate?.userEmail || "No Email"}`,
+AI Recruiter Team`,
 
     reevaluate: `Subject: Request for Additional Evaluation for ${candidate?.jobPosition || "the position"}
 
@@ -130,8 +128,7 @@ Would you be available for a conversation at your earliest convenience? Please r
 We appreciate your time and interest, and we look forward to continuing the conversation.
 
 Best regards,
-${candidate?.userName || "Candidate"}
-${candidate?.userEmail || "No Email"}`,
+AI Recruiter Team`,
   };
 
   // Function to open email client with template
