@@ -27,12 +27,9 @@ function QuestionsList({formData, onCreateLink}) {
       try{
 
       
-                      const result = await axios.post('/api/ai-model',{
-                          ...formData
-                      })  
+                      const result = await axios.post('/api/ai-model',{...formData})  
                       console.log(result.data.content);
                       const content = result.data.content
-                      // const FINAL_JSON = content.replace('"```json','').replace('```','')
 
                       const matched = content.match(/```json([\s\S]*?)```/);
                       const jsonString = matched ? matched[1].trim() : content;
@@ -40,56 +37,93 @@ function QuestionsList({formData, onCreateLink}) {
                       try {
                         setquestionList(JSON.parse(jsonString));
                       } catch (e) {
-                        toast('Parsing Error: Invalid response format');
+                        // clearer parsing error
+                        toast.error('Parsing Error: Invalid response format');
                         console.error("Parsing failed:", e, jsonString);
                       }
 
-
-
-
-                      // setquestionList(JSON.parse(FINAL_JSON))
                       setloading(false);
                     }
                     catch(e){
-                       toast('Server Error try again');
-                        setloading(false)
+                       // surface server/axios error details so user sees reason
+                           const serverMsg = e?.response?.data || e?.message || String(e);
+                           console.error('AI generation error:', serverMsg, e);
+
+                           // If the failure mentions credits (or similar billing block), don't permanently block the flow.
+                           // Provide a small fallback default question list so the user can continue creating the interview.
+                           const serverMsgString = typeof serverMsg === 'string' ? serverMsg : JSON.stringify(serverMsg);
+                           if (/credit/i.test(serverMsgString) || /please add/i.test(serverMsgString)) {
+                             toast.warning('AI generation unavailable due to billing/credits — using default questions so you can continue.');
+                             const defaultQuestions = [
+                               { question: 'Tell me about yourself and your background.', type: 'intro' },
+                               { question: 'Why are you interested in this role?', type: 'behavioral' },
+                               { question: 'Describe a challenging technical problem you solved.', type: 'technical' },
+                               { question: 'How do you approach debugging a production issue?', type: 'technical' },
+                               { question: 'Tell us about a time you worked on a team project.', type: 'behavioral' },
+                               { question: 'How do you prioritize tasks under tight deadlines?', type: 'behavioral' },
+                               { question: 'Explain a design decision you made and why.', type: 'technical' },
+                               { question: 'How do you stay current with new technologies?', type: 'culture' },
+                               { question: 'Describe a time you received critical feedback and how you responded.', type: 'behavioral' },
+                               { question: 'Do you have any questions for us?', type: 'closing' },
+                             ];
+                             setquestionList(defaultQuestions);
+                             setloading(false);
+                             return;
+                           }
+
+                           // Generic error handling for other errors
+                           toast.error('Server Error: ' + (typeof serverMsg === 'string' ? serverMsg : JSON.stringify(serverMsg)));
+                           setloading(false)
                     }
     }
 
-   const onFinish =async()=>{
+   // replace onFinish with robust handling and column normalization
+   const onFinish = async () => {
     setsaveLoading(true);
     const interview_id = uuidv4();
 
-      const { data, error } = await supabase
-  .from('Interviews')
-  .insert([
-    { 
+    try {
+      // Map the client-side camelCase formData keys to the lowercase column names
+      // that exist in Postgres (unquoted identifiers are lowercased).
+      // Only send lowercase column names to match Postgres unquoted identifiers
+      const payload = {
+        jobposition: formData?.jobPosition || null,
+        jobdescription: formData?.jobDescription || null,
+        questionlist: JSON.stringify(questionList),
+        useremail: user?.email || null,
+        interview_id: interview_id,
+        duration: formData?.duration || null,
+        type: formData?.type || null,
+      };
 
-      ...formData,
-      questionList: JSON.stringify(questionList),
-      userEmail:user?.email,
-      interview_id: interview_id
+      const { data, error } = await supabase.from('interviews').insert([payload]).select();
 
-     },
-  ])
-  .select()
-// User Credits Increment 
-    
-const userUpdate = await supabase
-  .from('Users')
-  .update({ credits: Number(user?.credits)-1 })
-  .eq('email', user?.email)
-  .select()
+      if (error) {
+        console.error('Insert interview error:', error);
+        toast.error('Failed to create interview: ' + (error.message || JSON.stringify(error)));
+        setsaveLoading(false);
+        return;
+      }
 
-  console.log(userUpdate);
+      // decrement user credits but do not fail the whole flow if this errors
+      const { data: userData, error: userError } = await supabase
+        .from('users')
+        .update({ credits: Math.max(0, Number(user?.credits || 0) - 1) })
+        .eq('email', user?.email)
+        .select();
 
+      if (userError) {
+        console.error('Failed to decrement credits:', userError);
+        toast.error('Interview created but failed to update credits: ' + (userError.message || JSON.stringify(userError)));
+      }
 
-
-
-  setsaveLoading(false);
-  // console.log(data);
-    onCreateLink(interview_id);
-
+      setsaveLoading(false);
+      onCreateLink(interview_id);
+    } catch (e) {
+      console.error('Unexpected error in onFinish:', e);
+      toast.error('Server Error: ' + (e?.message || String(e)));
+      setsaveLoading(false);
+    }
 
    }
 

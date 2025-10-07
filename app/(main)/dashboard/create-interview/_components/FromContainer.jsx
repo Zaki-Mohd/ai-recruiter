@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import {
@@ -13,25 +13,8 @@ import { InterviewType } from '@/services/Constants';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 
-function FromContainer({onHandleInputChange, GoToNext}) {
-
-        const [InterviewsType, setInterviewsType] = useState([]);
-        useEffect(() => {   
-                if(InterviewsType){
-                    onHandleInputChange('type', InterviewsType);
-                }
-
-        },[InterviewsType])
-
-        const AddInterviewType=(type)=>{
-                const data=InterviewsType.includes(type);
-                if(!data){
-                    setInterviewsType(prev=>[...prev, type])
-                }else{
-                    const result = InterviewsType.filter(item => item!=type);
-                    setInterviewsType(result);
-                }
-        }
+function FromContainer({ onHandleInputChange, GoToNext, selectedTypes = [], onToggleType }) {
+  // Presentational component: selection state is owned by the parent.
 
   return (
     <div className='p-5 bg-gray-50 rounded-xl'>
@@ -68,23 +51,29 @@ function FromContainer({onHandleInputChange, GoToNext}) {
         <div className='mt-5'>
             <h2 className='text-sm font-medium'>Interview Type</h2>
             <div className='flex gap-3 flex-wrap mt-2'>
-                {InterviewType.map((type, index) => (
-                    <div key={index} className={`
-                    flex gap-2 items-center cursor-pointer hover:bg-secondary p-1 px-2 bg-white border border-gray-300 rounded-2xl
-                    ${InterviewsType.includes(type.title)&&'bg-blue-50 text-primary'}
-                    `}
-                    onClick={()=> AddInterviewType(type.title)
-
-                    }
-                    >
-                       <type.icon className='h-4 w-4 '/>
-                       <span>{type.title}</span>
-                    </div>
-                ))}
+                {InterviewType.map((type, index) => {
+                    const isSelected = selectedTypes.includes(type.title);
+                    return (
+                        <button
+                            key={index}
+                            type="button"
+                            aria-pressed={isSelected}
+                            onClick={() => {
+                                if (onToggleType) onToggleType(type.title);
+                                // Also keep parent's generic onHandleInputChange in sync (backwards compatible)
+                                if (onHandleInputChange) onHandleInputChange('type', isSelected ? selectedTypes.filter(t => t !== type.title) : [...selectedTypes, type.title]);
+                            }}
+                            className={`flex gap-2 items-center p-1 px-2 bg-white border border-gray-300 rounded-2xl focus:outline-none focus:ring-2 focus:ring-primary transition-colors ${isSelected ? 'bg-blue-50 text-primary' : 'hover:bg-secondary'}`}
+                        >
+                            <type.icon className='h-4 w-4' aria-hidden="true" />
+                            <span>{type.title}</span>
+                        </button>
+                    );
+                })}
             </div>
         </div>
-        <div className='mt-7 flex justify-end' onClick={()=>GoToNext()}>
-                     <Button>Generate Question <ArrowRight></ArrowRight></Button>
+        <div className='mt-7 flex justify-end'>
+            <Button onClick={() => GoToNext()}>Generate Question <ArrowRight /></Button>
         </div>
                
 
