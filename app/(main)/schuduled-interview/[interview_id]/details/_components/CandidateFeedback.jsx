@@ -1,3 +1,5 @@
+"use client"
+
 import React from "react";
 import {
   Dialog,
@@ -9,6 +11,8 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { CheckCircle, XCircle, HelpCircle, Mail } from "lucide-react";
+import { toast } from "sonner";
 
 function CandidateFeedbackDialog({ candidate }) {
   // Safely extract and normalize feedback data
@@ -136,7 +140,19 @@ ${candidate?.userEmail || "No Email"}`,
     const subject = emailTemplates[templateType].split('\n')[0].replace('Subject: ', '');
     const body = emailTemplates[templateType].split('\n').slice(1).join('\n');
     
-    window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    // Toast messages for different actions
+    const toastMessages = {
+      selected: 'Opening email template for candidate selection',
+      rejected: 'Opening email template for candidate rejection',
+      reevaluate: 'Opening email template for re-evaluation request'
+    };
+    
+    // Displays different toast based on the action
+    toast.success(toastMessages[templateType], {
+      description: `Email template prepared for ${candidate?.userName || 'candidate'}`,
+    });
+    
+    window.open(`mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, '_blank');
   };
 
   return (
@@ -146,11 +162,12 @@ ${candidate?.userEmail || "No Email"}`,
           View Report
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-2xl">
-        <DialogHeader>
+      <DialogContent className="max-w-2xl max-h-[80vh] overflow-hidden flex flex-col">
+        <DialogHeader className="flex-shrink-0">
           <DialogTitle>Feedback Report</DialogTitle>
-          <DialogDescription asChild>
-            <div className="mt-5 space-y-4">
+        </DialogHeader>
+        <DialogDescription asChild>
+          <div className="flex-1 overflow-y-auto pr-2 space-y-4">
               {/* Candidate Header */}
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-4">
@@ -210,45 +227,48 @@ ${candidate?.userEmail || "No Email"}`,
               <div className={`p-5 rounded-md ${
                 isRecommended ? 'bg-green-50 border border-green-200' : 'bg-red-50 border border-red-200'
               }`}>
-                <div className="flex justify-between items-start">
-                  <div>
-                    <h2 className={`font-medium text-lg ${
-                      isRecommended ? 'text-green-700' : 'text-red-700'
-                    }`}>
-                      {feedback?.Recommendation || 'Recommendation to Hire'}
-                    </h2>
-                    <p className="mt-2 whitespace-pre-wrap text-gray-700">
-                      {recommendationMessage}
-                    </p>
-                  </div>
-                  <div className="flex flex-col gap-2 ml-4">
+                {/* Prominent Recommendation Text */}
+                <div className="mb-6">
+                  <h2 className={`font-bold text-l mb-3 ${
+                    isRecommended ? 'text-green-700' : 'text-red-700'
+                  }`}>
+                    {feedback?.Recommendation || 'Recommendation to Hire'}
+                  </h2>
+                  <p className="text-gray-800 text-l leading-relaxed whitespace-pre-wrap">
+                    {recommendationMessage}
+                  </p>
+                </div>
+                
+                {/* Action Buttons */}
+                <div className="border-t pt-4">
+                  <h3 className="text-sm font-medium text-gray-600 mb-3">Take Action:</h3>
+                  <div className="flex flex-wrap gap-3">
                     <Button 
                       onClick={() => handleEmailAction('selected')}
-                      variant="outline" 
-                      className="text-green-600 border-green-600 hover:bg-green-50"
+                      className="bg-green-600 text-white hover:bg-green-700 flex items-center gap-2"
                     >
+                      <CheckCircle className="w-4 h-4" />
                       Selected for Further Evaluation
                     </Button>
                     <Button 
                       onClick={() => handleEmailAction('rejected')}
-                      variant="outline" 
-                      className="text-red-600 border-red-600 hover:bg-red-50"
+                      className="bg-red-600 text-white hover:bg-red-700 flex items-center gap-2"
                     >
+                      <XCircle className="w-4 h-4" />
                       Rejected
                     </Button>
                     <Button 
                       onClick={() => handleEmailAction('reevaluate')}
-                      variant="outline" 
-                      className="text-yellow-600 border-yellow-600 hover:bg-yellow-50"
+                      className="bg-yellow-600 text-white hover:bg-yellow-700 flex items-center gap-2"
                     >
+                      <HelpCircle className="w-4 h-4" />
                       Request Re-Evaluation
                     </Button>
                   </div>
                 </div>
               </div>
             </div>
-          </DialogDescription>
-        </DialogHeader>
+        </DialogDescription>
       </DialogContent>
     </Dialog>
   );
