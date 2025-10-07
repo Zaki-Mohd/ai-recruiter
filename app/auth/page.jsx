@@ -55,7 +55,7 @@ const Login = () => {
       <div className="flex flex-col items-center justify-center h-[calc(100vh-80px)] px-4">
         <div className="flex flex-col items-center justify-center border rounded-2xl p-8 shadow-lg max-w-md w-full">
           <Image
-            className="w-[95px]"
+            className="w-[95px] translate-y-6"
             src="/logo.png"
             alt="logo"
             width={95}
