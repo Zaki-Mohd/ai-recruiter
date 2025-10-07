@@ -19,29 +19,39 @@ export async function POST(req) {
     .replace("{{duration}}", duration)
     .replace("{{type}}", type);
 
-  console.log("Prompt:", FINAL_PROMPT);
-
   try {
     let completion;
 
-    if (model.startsWith("google/")) {
-      const geminiModel = genAI.getGenerativeModel({ model: "gemini-pro" });
+    console.log("Incoming model:", model);
+
+    if (model.toLowerCase().includes("google") || model.toLowerCase().includes("gemini")) {
+      const geminiModel = genAI.getGenerativeModel({ model: "gemini-pro-1.5" });
       const result = await geminiModel.generateContent(FINAL_PROMPT);
       const response = await result.response;
       completion = response.text();
+
     } else {
       const chatCompletion = await openai.chat.completions.create({
-        model: model,
+        model,
         messages: [{ role: "user", content: FINAL_PROMPT }],
         max_tokens: 1000,
       });
       completion = chatCompletion.choices[0].message.content;
     }
 
-    console.log("Completion:", completion);
+    if (!completion || completion.trim() === "") {
+      throw new Error("Empty response from AI model.");
+    }
+
     return NextResponse.json({ message: completion });
   } catch (e) {
-    console.log(e);
-    return NextResponse.json({ error: e });
+    console.error("AI Model Request Error:", e);
+    return NextResponse.json(
+      {
+        error: "AI model request failed",
+        details: e.message,
+      },
+      { status: 500 }
+    );
   }
 }
