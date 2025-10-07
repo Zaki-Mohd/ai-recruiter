@@ -148,9 +148,7 @@ ${candidate?.userEmail || "No Email"}`,
     };
     
     // Displays different toast based on the action
-    toast.success(toastMessages[templateType], {
-      description: `Email template prepared for ${candidate?.userName || 'candidate'}`,
-    });
+    toast.success(toastMessages[templateType]);
     
     window.open(`mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`, '_blank');
   };
