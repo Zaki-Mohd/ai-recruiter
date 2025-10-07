@@ -117,4 +117,5 @@ Please read our [**Contributing Guidelines**](CONTRIBUTING.md) to learn how you 
 
 ## License
 
-This project is licensed under the MIT License.
+This project is licensed under the [MIT License](LICENSE).
+

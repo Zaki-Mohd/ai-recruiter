@@ -55,6 +55,20 @@ function CandidateFeedbackDialog({ candidate }) {
     return "Bad";
   };
 
+  // Utility function to determine progress bar color based on score
+  const getProgressColor = (score) => {
+    if (score >= 7) return '[&>div]:bg-green-500'; // High score - Green
+    if (score >= 4) return '[&>div]:bg-yellow-500'; // Average score - Yellow
+    return '[&>div]:bg-red-500'; // Low score - Red
+  };
+
+  // Utility function to determine text color based on score
+  const getScoreTextColor = (score) => {
+    if (score >= 7) return 'text-green-600'; // High score - Green
+    if (score >= 4) return 'text-yellow-600'; // Average score - Yellow
+    return 'text-red-600'; // Low score - Red
+  };
+
   // Email templates
   const emailTemplates = {
     selected: `Subject: Congratulations! You've been selected for further evaluation
@@ -166,7 +180,7 @@ ${candidate?.userEmail || "No Email"}`,
                     </h2>
                   </div>
                 </div>
-                <h2 className="text-primary text-2xl font-bold">
+                <h2 className={`text-2xl font-bold ${getScoreTextColor(overallScore)}`}>
                   {overallScore}/10
                 </h2>
               </div>
@@ -179,11 +193,11 @@ ${candidate?.userEmail || "No Email"}`,
                     <div key={skill}>
                       <div className="flex justify-between text-sm mb-1">
                         {skill.replace(/([A-Z])/g, ' $1').trim()} 
-                        <span>{score}/10</span>
+                        <span className={getScoreTextColor(score)}>{score}/10</span>
                       </div>
                       <Progress 
                         value={score * 10} 
-                        className="h-2 mt-1 [&>div]:bg-primary"
+                        className={`h-2 mt-1 ${getProgressColor(score)}`}
                       />
                     </div>
                   ))}
