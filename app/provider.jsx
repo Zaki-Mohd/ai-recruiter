@@ -1,6 +1,7 @@
 "use client";
 import { UserDetailContext } from "@/context/UserDetailContext";
 import { supabase } from "@/services/supabaseClient";
+import { ThemeProvider } from "next-themes";
 import React,{useEffect, useState,useContext} from "react";
 function Provider({children}) {
     const [user,setUser]=useState();
@@ -39,6 +40,14 @@ return (
 )
 }
 export default Provider;
+
+export function Providers({ children }) {
+    return (
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            <Provider>{children}</Provider>
+        </ThemeProvider>
+    );
+}
 
 export const useUser=() => {
     const context=useContext(UserDetailContext);
