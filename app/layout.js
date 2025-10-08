@@ -1,8 +1,8 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
-import Provider from "./provider";
 import ScrollToTop from "@/components/ui/ScrollToTop";
+import Providers from "./providers"; // ✅ new wrapper
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -21,15 +21,15 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <Provider>
+        <Providers>
           {children}
           <ScrollToTop />
           <Toaster />
-        </Provider>
+        </Providers>
       </body>
     </html>
   );
