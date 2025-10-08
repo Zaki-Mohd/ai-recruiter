@@ -48,9 +48,9 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen dark:bg-gray-900">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
       {/* Navbar */}
-      <nav className="flex justify-between items-center px-8 py-4 dark:bg-gray-900">
+      <nav className="flex justify-between items-center px-8 py-4 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
         {/* Logo & Title */}
         <div className="flex items-center space-x-2">
           <Link href="/" className="flex items-center space-x-2">
@@ -61,12 +61,12 @@ const Login = () => {
               height={40}
               className="cursor-pointer"
             />
-            <span className="text-xl font-bold dark:text-white">AIcruiter</span>
+            <span className="text-xl font-bold text-gray-900 dark:text-white">AIcruiter</span>
           </Link>
         </div>
 
         {/* Nav Links */}
-        <div className="hidden md:flex space-x-6">
+        <div className="hidden md:flex items-center space-x-6">
           <button className="text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition">
             Features
           </button>
@@ -76,10 +76,10 @@ const Login = () => {
           <button className="text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white transition">
             Pricing
           </button>
-        </div>
 
-        {/* Theme toggle */}
-        <ThemeToggle />
+          {/* Add theme toggle */}
+          <ThemeToggle />
+        </div>
       </nav>
 
       {/* Login Section */}
@@ -101,7 +101,7 @@ const Login = () => {
               width={400}
               height={400}
             />
-            <h2 className="text-2xl font-bold text-center mt-4 dark:text-white">
+            <h2 className="text-2xl font-bold text-center mt-4 text-gray-900 dark:text-white">
               Welcome to AIcruiter
             </h2>
             <p className="text-center text-gray-500 dark:text-gray-400">

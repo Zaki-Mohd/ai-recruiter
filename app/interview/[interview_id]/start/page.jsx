@@ -7,7 +7,7 @@ import AlertConfirm from './_components/AlertConfirm';
 import { toast } from 'sonner';
 import { supabase } from '@/services/supabaseClient';
 import { useParams, useRouter } from 'next/navigation';
-import ThemeToggle from "@/components/ThemeToggle";
+import ThemeToggle from '@/components/ThemeToggle';
 
 function StartInterview() {
   const [interviewInfo, setInterviewInfo] = useState(null);
@@ -229,7 +229,7 @@ Your task is to ask the candidate the following questions one by one.
         <div className="fixed top-4 right-4 z-50">
           <ThemeToggle />
         </div>
-
+        
         <div className='max-w-7xl mx-auto'>
             <div className='flex flex-col sm:flex-row justify-between items-center mb-8 gap-4'>
                 <h2 className='font-bold text-2xl text-gray-800 dark:text-white'>AI Interview Session</h2>
@@ -260,17 +260,16 @@ Your task is to ask the candidate the following questions one by one.
             </div>
 
             <div className='flex items-center gap-8 justify-center mt-12'>
-                <div className='p-4 bg-gray-200 rounded-full cursor-not-allowed'>
-                    <Mic className='h-12 w-12 text-gray-400' />
+                <div className='p-4 bg-gray-200 dark:bg-gray-700 rounded-full cursor-not-allowed'>
+                    <Mic className='h-12 w-12 text-gray-400 dark:text-gray-500' />
                 </div>
-                {/* This is the corrected usage that prevents the error */}
-                <AlertConfirm onConfirm={stopInterview}>
-                    <div className='p-5 bg-red-500 hover:bg-red-600 transition-colors rounded-full cursor-pointer shadow-lg hover:shadow-xl'>
+                <AlertConfirm onConfirm={stopInterview}>
+                    <div className='p-5 bg-red-500 hover:bg-red-600 transition-colors rounded-full cursor-pointer shadow-lg hover:shadow-xl'>
                         <Phone className='h-12 w-12 text-white' />
                     </div>
-                </AlertConfirm>
-            </div>
-        </div>
+                </AlertConfirm>
+            </div>
+        </div>
     </div>
   );
 }
