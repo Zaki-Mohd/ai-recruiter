@@ -17,6 +17,10 @@ export default function ProfessionalLandingPage() {
     window.location.href = "/auth";
   };
 
+  const handleloginclick = () => {
+    window.location.href = "/login";
+  };
+
   const scrollToSection = (id) => {
     const element = document.getElementById(id);
     if (element) {
@@ -36,67 +40,90 @@ export default function ProfessionalLandingPage() {
 
       {/* Navbar */}
       <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white/95 backdrop-blur-sm shadow-sm">
-        <div className="container mx-auto flex h-16 items-center justify-between px-6 max-w-7xl">
-          <button onClick={handleDashboardClick} className="flex items-center gap-2">
-            <div className="w-9 h-9 bg-gradient-to-br from-blue-600 to-blue-500 rounded-lg flex items-center justify-center shadow-md">
-              <BrainCircuit className="w-5 h-5 text-white" />
-            </div>
-            <span className="text-xl font-bold text-gray-900">AIcruiter</span>
-          </button>
+  <div className="container mx-auto flex h-16 items-center justify-between px-6 max-w-7xl">
+    <button onClick={handleDashboardClick} className="flex items-center gap-2">
+      <div className="w-9 h-9 bg-gradient-to-br from-blue-600 to-blue-500 rounded-lg flex items-center justify-center shadow-md">
+        <BrainCircuit className="w-5 h-5 text-white" />
+      </div>
+      <span className="text-xl font-bold text-gray-900">AIcruiter</span>
+    </button>
 
-          {/* Desktop Menu */}
-          <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
-            <button onClick={() => scrollToSection('features')} className="text-gray-600 hover:text-blue-600 transition-colors">
-              Features
-            </button>
-            <button onClick={() => scrollToSection('how-it-works')} className="text-gray-600 hover:text-blue-600 transition-colors">
-              How It Works
-            </button>
-            <button onClick={() => scrollToSection('pricing')} className="text-gray-600 hover:text-blue-600 transition-colors">
-              Pricing
-            </button>
-          </nav>
+    {/* Desktop Menu */}
+    <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
+      <button onClick={() => scrollToSection('features')} className="text-gray-600 hover:text-blue-600 transition-colors">
+        Features
+      </button>
+      <button onClick={() => scrollToSection('how-it-works')} className="text-gray-600 hover:text-blue-600 transition-colors">
+        How It Works
+      </button>
+      <button onClick={() => scrollToSection('pricing')} className="text-gray-600 hover:text-blue-600 transition-colors">
+        Pricing
+      </button>
+    </nav>
 
-          <div className="flex items-center gap-4">
-            <button
-              onClick={handleDashboardClick}
-              className="hidden md:inline-flex items-center justify-center rounded-lg bg-blue-600 px-5 py-2.5 font-semibold text-white transition-all hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-600/30 group"
-            >
-              <span>Dashboard</span>
-              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </button>
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 text-gray-600 hover:text-gray-900"
-            >
-              {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-            </button>
-          </div>
-        </div>
+    <div className="flex items-center gap-4">
+      {/* Dashboard Button */}
+      <button
+        onClick={handleDashboardClick}
+        className="hidden md:inline-flex items-center justify-center rounded-lg bg-blue-600 px-5 py-2.5 font-semibold text-white transition-all hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-600/30 group"
+      >
+        <span>Dashboard</span>
+        <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+      </button>
 
-        {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <div className="md:hidden border-t border-gray-200 bg-white shadow-lg">
-            <div className="container mx-auto px-6 py-4 space-y-3">
-              <button onClick={() => scrollToSection('features')} className="block w-full text-left py-2 text-gray-600 hover:text-blue-600 font-medium">
-                Features
-              </button>
-              <button onClick={() => scrollToSection('how-it-works')} className="block w-full text-left py-2 text-gray-600 hover:text-blue-600 font-medium">
-                How It Works
-              </button>
-              <button onClick={() => scrollToSection('pricing')} className="block w-full text-left py-2 text-gray-600 hover:text-blue-600 font-medium">
-                Pricing
-              </button>
-              <button
-                onClick={handleDashboardClick}
-                className="w-full mt-2 inline-flex items-center justify-center rounded-lg bg-blue-600 px-5 py-2.5 font-semibold text-white hover:bg-blue-700"
-              >
-                Dashboard
-              </button>
-            </div>
-          </div>
-        )}
-      </header>
+      {/* Login Button */}
+      <button
+        onClick={handleloginclick}  // <-- add your login function or route here
+        className="hidden md:inline-flex items-center justify-center rounded-lg border border-blue-600 px-5 py-2.5 font-semibold text-blue-600 transition-all hover:bg-blue-50 hover:shadow-lg hover:shadow-blue-600/20 group"
+      >
+        <span>Login</span>
+        <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+      </button>
+
+      {/* Mobile Menu Toggle */}
+      <button
+        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        className="md:hidden p-2 text-gray-600 hover:text-gray-900"
+      >
+        {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+      </button>
+    </div>
+  </div>
+
+  {/* Mobile Menu */}
+  {mobileMenuOpen && (
+    <div className="md:hidden border-t border-gray-200 bg-white shadow-lg">
+      <div className="container mx-auto px-6 py-4 space-y-3">
+        <button onClick={() => scrollToSection('features')} className="block w-full text-left py-2 text-gray-600 hover:text-blue-600 font-medium">
+          Features
+        </button>
+        <button onClick={() => scrollToSection('how-it-works')} className="block w-full text-left py-2 text-gray-600 hover:text-blue-600 font-medium">
+          How It Works
+        </button>
+        <button onClick={() => scrollToSection('pricing')} className="block w-full text-left py-2 text-gray-600 hover:text-blue-600 font-medium">
+          Pricing
+        </button>
+
+        {/* Dashboard Button (Mobile) */}
+        <button
+          onClick={handleDashboardClick}
+          className="w-full mt-2 inline-flex items-center justify-center rounded-lg bg-blue-600 px-5 py-2.5 font-semibold text-white hover:bg-blue-700"
+        >
+          Dashboard
+        </button>
+
+        {/* Login Button (Mobile) */}
+        <button
+          onClick={handleloginclick}  // <-- add your login function or route here
+          className="w-full mt-2 inline-flex items-center justify-center rounded-lg border border-blue-600 px-5 py-2.5 font-semibold text-blue-600 hover:bg-blue-50"
+        >
+          Login
+        </button>
+      </div>
+    </div>
+  )}
+</header>
+
 
       <main className="flex-grow">
         {/* Hero Section */}

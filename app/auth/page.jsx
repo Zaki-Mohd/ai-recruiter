@@ -4,13 +4,16 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { supabase } from "@/services/supabaseClient";
+const handleloginclick = () => {
+    window.location.href = "/login";
+  };
 
 const Login = () => {
   const signInWithGoogle = async () => {
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: `http://ai-recruiter-azure.vercel.app/dashboard`,
+        redirectTo: 'http://ai-recruiter-azure.vercel.app/dashboard',
       },
     });
 
@@ -74,8 +77,11 @@ const Login = () => {
               Welcome to AIcruiter
             </h2>
             <p className="text-center text-gray-500">
-              Login via Google Authentication
+              Login to AIcruiter
             </p>
+            <Button onClick={handleloginclick} className="w-full mt-7">
+              Login/Signup
+            </Button>
             <Button onClick={signInWithGoogle} className="w-full mt-7">
               Sign in with Google
             </Button>
