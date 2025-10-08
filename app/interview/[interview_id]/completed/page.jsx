@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import ThemeToggle from "@/components/ThemeToggle";
 
 export default function LandingPage() {
   const router = useRouter();
@@ -10,7 +11,12 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col items-center justify-center px-4">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col items-center justify-center px-4 relative">
+      {/* Add theme toggle in top right */}
+      <div className="absolute top-4 right-4">
+        <ThemeToggle />
+      </div>
+      
       {/* Thank‑you Image */}
       <Image
         src="/thankyou.png" 
@@ -24,7 +30,7 @@ export default function LandingPage() {
         Thank you for attending the interview!
       </h1>
       <p className="text-gray-600 dark:text-gray-400 text-center max-w-lg mb-8">
-        Our AIcruiter team appreciates your time and wishes you the best. We’re here to help you succeed.
+        Our AIcruiter team appreciates your time and wishes you the best. We're here to help you succeed.
       </p>
       <button
         onClick={handleCloseBrowser}

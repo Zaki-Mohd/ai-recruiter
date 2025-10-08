@@ -7,6 +7,7 @@ import AlertConfirm from './_components/AlertConfirm';
 import { toast } from 'sonner';
 import { supabase } from '@/services/supabaseClient';
 import { useParams, useRouter } from 'next/navigation';
+import ThemeToggle from "@/components/ThemeToggle";
 
 function StartInterview() {
   const [interviewInfo, setInterviewInfo] = useState(null);
@@ -223,33 +224,38 @@ Your task is to ask the candidate the following questions one by one.
   }
 
   return (
-    <div className='p-5 md:p-10 lg:p-20 bg-gray-50 min-h-screen'>
-        <div className='max-w-7xl mx-auto'>
+    <div className='p-5 md:p-10 lg:p-20 bg-gray-50 dark:bg-gray-900 min-h-screen'>
+        {/* Add theme toggle in top right */}
+        <div className="fixed top-4 right-4 z-50">
+          <ThemeToggle />
+        </div>
+
+        <div className='max-w-7xl mx-auto'>
             <div className='flex flex-col sm:flex-row justify-between items-center mb-8 gap-4'>
-                <h2 className='font-bold text-2xl text-gray-800'>AI Interview Session</h2>
+                <h2 className='font-bold text-2xl text-gray-800 dark:text-white'>AI Interview Session</h2>
                 <span className='flex gap-2 items-center bg-red-500 text-white px-4 py-2 rounded-full shadow-lg'>
                     <Timer size={20} /> <span className='font-mono text-lg font-semibold tracking-wider'>{formatTime(timeLeft)}</span>
                 </span>
             </div>
 
             <div className="flex flex-col md:flex-row justify-center items-stretch gap-10">
-                {/* AI Panel */}
-                <div className="w-full md:w-1/2 lg:w-[450px] bg-white rounded-2xl shadow-xl border border-gray-200 flex flex-col items-center justify-center p-6 gap-5 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
-                    <Image src={'/ai.png'} width={120} height={120} alt='AI Recruiter' className='rounded-full object-cover border-4 border-indigo-200 p-1' />
-                    <h2 className='font-semibold text-gray-700 text-2xl'>AI Recruiter</h2>
-                    <div className='flex items-center gap-2 px-3 py-1 bg-gray-100 rounded-full'>
+                {/* AI Panel */}
+                <div className="w-full md:w-1/2 lg:w-[450px] bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center p-6 gap-5 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
+                    <Image src={'/ai.png'} width={120} height={120} alt='AI Recruiter' className='rounded-full object-cover border-4 border-indigo-200 dark:border-indigo-900 p-1' />
+                    <h2 className='font-semibold text-gray-700 dark:text-gray-200 text-2xl'>AI Recruiter</h2>
+                    <div className='flex items-center gap-2 px-3 py-1 bg-gray-100 dark:bg-gray-700 rounded-full'>
                       <div className={`w-3 h-3 rounded-full transition-colors ${isCallActive ? 'bg-green-500 animate-pulse' : 'bg-red-500'}`}></div>
-                      <span className='text-sm text-gray-600 font-medium'>{isCallActive ? 'Active' : 'Not Connected'}</span>
+                      <span className='text-sm text-gray-600 dark:text-gray-300 font-medium'>{isCallActive ? 'Active' : 'Not Connected'}</span>
                     </div>
                 </div>
                 {/* Candidate Panel */}
-                <div className="w-full md:w-1/2 lg:w-[450px] bg-white rounded-2xl shadow-xl border border-gray-200 flex flex-col items-center justify-center p-6 gap-5 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
+                <div className="w-full md:w-1/2 lg:w-[450px] bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-200 dark:border-gray-700 flex flex-col items-center justify-center p-6 gap-5 transition-all duration-300 hover:shadow-2xl hover:-translate-y-1">
                     <div className='bg-gradient-to-br from-indigo-500 to-purple-600 text-white flex items-center justify-center w-32 h-32 rounded-full shadow-lg'>
                         <span className='text-6xl font-extrabold'>
                             {interviewInfo?.username ? interviewInfo.username[0].toUpperCase() : 'C'}
                         </span>
                     </div>
-                    <h2 className='font-semibold text-gray-700 text-2xl'>{interviewInfo?.username || 'Candidate'}</h2>
+                    <h2 className='font-semibold text-gray-700 dark:text-gray-200 text-2xl'>{interviewInfo?.username || 'Candidate'}</h2>
                 </div>
             </div>
 

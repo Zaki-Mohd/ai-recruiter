@@ -11,6 +11,7 @@ import { toast } from 'sonner';
 import { InterviewDataContext } from '@/context/InterviewDataContext';
 import { useRouter } from 'next/navigation';
 import QuestionsList from '@/app/(main)/dashboard/create-interview/_components/QuestionsList';
+import ThemeToggle from "@/components/ThemeToggle";
 
 function Interview() {
 
@@ -76,17 +77,23 @@ const onJoinInterview = async()=>{
 
 
   return (
-    <div className='px-10 md:px-28 lg:px-48 xl:px-64 mt-16 '>
-        <div className="flex flex-col items-center justify-center border rounded-xl p-7 lg:px-33 xl:px-52 mb-20">  <Image src={'/logo.png'} width={80} height={80} alt='logo' className='w-[80px]'/>
-        <h2 className='mt-3'>AI-Powered Interview Platform</h2>
+    <div className='px-10 md:px-28 lg:px-48 xl:px-64 mt-16 dark:bg-gray-900'>
+      {/* Add theme toggle in top right */}
+      <div className="fixed top-4 right-4 z-50">
+        <ThemeToggle />
+      </div>
+      
+      <div className="flex flex-col items-center justify-center border rounded-xl p-7 lg:px-33 xl:px-52 mb-20 dark:border-gray-700 dark:bg-gray-800">
+        <Image src={'/logo.png'} width={80} height={80} alt='logo' className='w-[80px]'/>
+        <h2 className='mt-3 dark:text-white'>AI-Powered Interview Platform</h2>
         <Image src={'/interview.png'} alt='interview' width={200} height={200} className='my-6'/>
-        <h2 className='font-bold text-xl '>{interviewdata?.jobPosition}</h2>
-        <h2 className='flex gap-2 items-center text-gray-500 mt-3'><Clock className='h-4 w-4' /> {interviewdata?.duration}</h2>
+        <h2 className='font-bold text-xl dark:text-white'>{interviewdata?.jobPosition}</h2>
+        <h2 className='flex gap-2 items-center text-gray-500 dark:text-gray-400 mt-3'><Clock className='h-4 w-4' /> {interviewdata?.duration}</h2>
         <div className="w-full">
-            <h2>Enter your Full name</h2>
+            <h2 className="dark:text-white">Enter your Full name</h2>
             <Input placeholder='e.g. Md Zaki' onChange={(event)=>{
                     setusername(event.target.value);
-            }}/>
+            }} className="dark:bg-gray-700 dark:border-gray-600"/>
         </div>
 
                  <div className="w-full">

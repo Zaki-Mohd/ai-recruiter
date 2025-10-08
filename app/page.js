@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { ArrowRight, BrainCircuit, Clock, BarChartBig, Scale, Zap, CheckCircle, Menu, X, Sparkles, Users, TrendingUp, Play, MessageSquare, FileText, Award } from "lucide-react";
 import Image from "next/image";
+import ThemeToggle from "@/components/ThemeToggle";
 
 export default function ProfessionalLandingPage() {
   const [mounted, setMounted] = useState(false);
@@ -26,7 +27,7 @@ export default function ProfessionalLandingPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-gray-50 text-gray-800">
+    <div className="flex flex-col min-h-screen bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-100">
       {/* Subtle Background Gradient */}
       <div className="fixed inset-0 -z-10">
         <div className="absolute top-0 left-0 right-0 h-[600px] bg-gradient-to-b from-blue-50 via-white to-transparent"></div>
@@ -35,26 +36,29 @@ export default function ProfessionalLandingPage() {
       </div>
 
       {/* Navbar */}
-      <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white/95 backdrop-blur-sm shadow-sm">
+      <header className="sticky top-0 z-50 w-full border-b border-gray-200 dark:border-gray-800 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm shadow-sm">
         <div className="container mx-auto flex h-16 items-center justify-between px-6 max-w-7xl">
           <button onClick={handleDashboardClick} className="flex items-center gap-2">
             <div className="w-9 h-9 bg-gradient-to-br from-blue-600 to-blue-500 rounded-lg flex items-center justify-center shadow-md">
               <BrainCircuit className="w-5 h-5 text-white" />
             </div>
-            <span className="text-xl font-bold text-gray-900">AIcruiter</span>
+            <span className="text-xl font-bold text-gray-900 dark:text-white">AIcruiter</span>
           </button>
 
           {/* Desktop Menu */}
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
-            <button onClick={() => scrollToSection('features')} className="text-gray-600 hover:text-blue-600 transition-colors">
+            <button onClick={() => scrollToSection('features')} className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
               Features
             </button>
-            <button onClick={() => scrollToSection('how-it-works')} className="text-gray-600 hover:text-blue-600 transition-colors">
+            <button onClick={() => scrollToSection('how-it-works')} className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
               How It Works
             </button>
-            <button onClick={() => scrollToSection('pricing')} className="text-gray-600 hover:text-blue-600 transition-colors">
+            <button onClick={() => scrollToSection('pricing')} className="text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
               Pricing
             </button>
+            
+            {/* Add theme toggle button */}
+            <ThemeToggle />
           </nav>
 
           <div className="flex items-center gap-4">
@@ -67,7 +71,7 @@ export default function ProfessionalLandingPage() {
             </button>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="md:hidden p-2 text-gray-600 hover:text-gray-900"
+              className="md:hidden p-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
             >
               {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </button>
@@ -76,17 +80,24 @@ export default function ProfessionalLandingPage() {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden border-t border-gray-200 bg-white shadow-lg">
+          <div className="md:hidden border-t border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 shadow-lg">
             <div className="container mx-auto px-6 py-4 space-y-3">
-              <button onClick={() => scrollToSection('features')} className="block w-full text-left py-2 text-gray-600 hover:text-blue-600 font-medium">
+              <button onClick={() => scrollToSection('features')} className="block w-full text-left py-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium">
                 Features
               </button>
-              <button onClick={() => scrollToSection('how-it-works')} className="block w-full text-left py-2 text-gray-600 hover:text-blue-600 font-medium">
+              <button onClick={() => scrollToSection('how-it-works')} className="block w-full text-left py-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium">
                 How It Works
               </button>
-              <button onClick={() => scrollToSection('pricing')} className="block w-full text-left py-2 text-gray-600 hover:text-blue-600 font-medium">
+              <button onClick={() => scrollToSection('pricing')} className="block w-full text-left py-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 font-medium">
                 Pricing
               </button>
+              
+              {/* Add theme toggle button for mobile */}
+              <div className="py-2">
+                <ThemeToggle className="w-full flex justify-start items-center gap-2">
+                </ThemeToggle>
+              </div>
+              
               <button
                 onClick={handleDashboardClick}
                 className="w-full mt-2 inline-flex items-center justify-center rounded-lg bg-blue-600 px-5 py-2.5 font-semibold text-white hover:bg-blue-700"
@@ -153,13 +164,13 @@ export default function ProfessionalLandingPage() {
         </section>
 
         {/* Features Section */}
-        <section id="features" className="py-24 bg-white">
+        <section id="features" className="py-24 bg-white dark:bg-gray-800">
           <div className="container mx-auto px-6 max-w-7xl">
             <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
                 The Future of Interviewing is Here
               </h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
                 Unlock powerful tools designed to give you a competitive edge in talent acquisition
               </p>
             </div>
@@ -196,13 +207,13 @@ export default function ProfessionalLandingPage() {
         </section>
 
         {/* How It Works */}
-        <section id="how-it-works" className="py-24 bg-gray-50">
+        <section id="how-it-works" className="py-24 bg-gray-50 dark:bg-gray-900">
           <div className="container mx-auto px-6 max-w-7xl">
             <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+              <h2 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-4">
                 Get Started in 3 Simple Steps
               </h2>
-              <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+              <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
                 Launch your first AI-powered interview campaign in minutes
               </p>
             </div>
@@ -231,13 +242,13 @@ export default function ProfessionalLandingPage() {
                 },
               ].map((step, idx) => (
                 <div key={idx} className="relative">
-                  <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-200 hover:shadow-xl transition-shadow relative z-10">
+                  <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-shadow relative z-10">
                     <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-blue-500 rounded-xl flex items-center justify-center mb-6 mx-auto text-white shadow-lg">
                       {step.icon}
                     </div>
-                    <div className="text-sm font-bold text-blue-600 text-center mb-2">STEP {step.number}</div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-3 text-center">{step.title}</h3>
-                    <p className="text-gray-600 text-center">{step.description}</p>
+                    <div className="text-sm font-bold text-blue-600 dark:text-blue-400 text-center mb-2">STEP {step.number}</div>
+                    <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3 text-center">{step.title}</h3>
+                    <p className="text-gray-600 dark:text-gray-300 text-center">{step.description}</p>
                   </div>
                 </div>
               ))}
@@ -246,7 +257,7 @@ export default function ProfessionalLandingPage() {
         </section>
 
         {/* CTA Section */}
-        <section id="pricing" className="py-24 bg-white">
+        <section id="pricing" className="py-24 bg-white dark:bg-gray-800">
           <div className="container mx-auto px-6 max-w-5xl">
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-blue-600 to-purple-600 rounded-3xl blur-2xl opacity-20"></div>
@@ -288,47 +299,47 @@ export default function ProfessionalLandingPage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-gray-200 bg-white">
+      <footer className="border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900">
         <div className="container mx-auto px-6 py-12 max-w-7xl">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
             <div>
-              <h3 className="font-semibold text-gray-900 mb-4">Product</h3>
-              <div className="flex flex-col gap-3 text-sm text-gray-600">
-                <button onClick={() => scrollToSection('features')} className="text-left hover:text-blue-600 transition-colors">Features</button>
-                <button onClick={() => scrollToSection('pricing')} className="text-left hover:text-blue-600 transition-colors">Pricing</button>
-                <button onClick={handleDashboardClick} className="text-left hover:text-blue-600 transition-colors">Demo</button>
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Product</h3>
+              <div className="flex flex-col gap-3 text-sm text-gray-600 dark:text-gray-400">
+                <button onClick={() => scrollToSection('features')} className="text-left hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Features</button>
+                <button onClick={() => scrollToSection('pricing')} className="text-left hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Pricing</button>
+                <button onClick={handleDashboardClick} className="text-left hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Demo</button>
               </div>
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900 mb-4">Company</h3>
-              <div className="flex flex-col gap-3 text-sm text-gray-600">
-                <button onClick={handleDashboardClick} className="text-left hover:text-blue-600 transition-colors">About Us</button>
-                <button onClick={handleDashboardClick} className="text-left hover:text-blue-600 transition-colors">Careers</button>
-                <button onClick={handleDashboardClick} className="text-left hover:text-blue-600 transition-colors">Contact</button>
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Company</h3>
+              <div className="flex flex-col gap-3 text-sm text-gray-600 dark:text-gray-400">
+                <button onClick={handleDashboardClick} className="text-left hover:text-blue-600 dark:hover:text-blue-400 transition-colors">About Us</button>
+                <button onClick={handleDashboardClick} className="text-left hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Careers</button>
+                <button onClick={handleDashboardClick} className="text-left hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Contact</button>
               </div>
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900 mb-4">Legal</h3>
-              <div className="flex flex-col gap-3 text-sm text-gray-600">
-                <button onClick={handleDashboardClick} className="text-left hover:text-blue-600 transition-colors">Privacy Policy</button>
-                <button onClick={handleDashboardClick} className="text-left hover:text-blue-600 transition-colors">Terms of Service</button>
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-4">Legal</h3>
+              <div className="flex flex-col gap-3 text-sm text-gray-600 dark:text-gray-400">
+                <button onClick={handleDashboardClick} className="text-left hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Privacy Policy</button>
+                <button onClick={handleDashboardClick} className="text-left hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Terms of Service</button>
               </div>
             </div>
             <div>
-              <h3 className="font-semibold text-gray-900 mb-4">AIcruiter</h3>
-              <p className="text-sm text-gray-600 mb-4">
+              <h3 className="font-semibold text-gray-900 dark:text-white mb-4">AIcruiter</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
                 The future of recruitment powered by AI
               </p>
             </div>
           </div>
-          <div className="pt-8 border-t border-gray-200 flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="pt-8 border-t border-gray-200 dark:border-gray-700 flex flex-col md:flex-row justify-between items-center gap-4">
             <button onClick={handleDashboardClick} className="flex items-center gap-2">
               <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-500 rounded-lg flex items-center justify-center">
                 <BrainCircuit className="w-5 h-5 text-white" />
               </div>
-              <span className="text-lg font-bold text-gray-900">AIcruiter</span>
+              <span className="text-lg font-bold text-gray-900 dark:text-white">AIcruiter</span>
             </button>
-            <div className="text-sm text-gray-600">
+            <div className="text-sm text-gray-600 dark:text-gray-400">
               © 2025 AIcruiter. All rights reserved.
             </div>
           </div>
@@ -340,14 +351,14 @@ export default function ProfessionalLandingPage() {
 
 function FeatureCard({ className, icon, title, description }) {
   return (
-    <div className={`relative overflow-hidden rounded-2xl bg-white p-8 shadow-lg border border-gray-200 hover:shadow-xl hover:border-blue-200 transition-all group ${className || ""}`}>
-      <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-blue-50 opacity-50 group-hover:opacity-100 transition-opacity"></div>
+    <div className={`relative overflow-hidden rounded-2xl bg-white dark:bg-gray-800 p-8 shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-xl hover:border-blue-200 dark:hover:border-blue-700 transition-all group ${className || ""}`}>
+      <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-blue-50 dark:bg-blue-900 opacity-50 group-hover:opacity-100 transition-opacity"></div>
       <div className="relative z-10">
-        <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-blue-50 border border-blue-100 mb-4">
+        <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-blue-50 dark:bg-blue-900 border border-blue-100 dark:border-blue-800 mb-4">
           {icon}
         </div>
-        <h3 className="text-xl font-bold text-gray-900 mb-3">{title}</h3>
-        <p className="text-gray-600 leading-relaxed">{description}</p>
+        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-3">{title}</h3>
+        <p className="text-gray-600 dark:text-gray-300 leading-relaxed">{description}</p>
       </div>
     </div>
   );

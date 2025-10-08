@@ -70,7 +70,7 @@ Follow these instructions to set up the project on your local machine.
         ```bash
         supabase link --project-ref <your-project-ref>
         ```
-        You can find your `<your-project-ref>` in the URL of your Supabase project dashboard (e.g., `https://app.supabase.com/project/<your-project-ref>`).
+       
 
     c.  **Push the database migrations:** This will create the necessary tables and policies in your Supabase project.
         ```bash
