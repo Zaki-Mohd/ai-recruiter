@@ -114,17 +114,17 @@ export default function ProfessionalLandingPage() {
         <section className="container mx-auto px-6 pt-20 pb-24 max-w-7xl">
           <div className="flex flex-col lg:flex-row items-center gap-12">
             <div className="flex-1 text-center lg:text-left space-y-8">
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 border border-blue-200 rounded-full text-sm font-medium text-blue-700">
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-blue-50 dark:bg-blue-900/30 border border-blue-200 dark:border-blue-800 rounded-full text-sm font-medium text-blue-700 dark:text-blue-300">
                 <Sparkles className="w-4 h-4" />
                 <span>AI-Powered Recruitment Platform</span>
               </div>
 
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-gray-900 leading-tight">
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-gray-900 dark:text-white leading-tight">
                 Hire Faster, Smarter, and
-                <span className="block text-blue-600 mt-2">Without Bias</span>
+                <span className="block text-blue-600 dark:text-blue-400 mt-2">Without Bias</span>
               </h1>
 
-              <p className="text-xl text-gray-600 max-w-2xl">
+              <p className="text-xl text-gray-600 dark:text-gray-300 max-w-2xl">
                 AIcruiter automates initial screening interviews with AI voice agents, providing deep candidate analysis so you can focus on finding the perfect match.
               </p>
 
@@ -138,7 +138,7 @@ export default function ProfessionalLandingPage() {
                 </button>
                 <button
                   onClick={handleDashboardClick}
-                  className="inline-flex items-center justify-center rounded-lg border-2 border-gray-300 bg-white px-8 py-4 font-semibold text-gray-900 transition-all hover:border-gray-400 hover:shadow-md"
+                  className="inline-flex items-center justify-center rounded-lg border-2 border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-8 py-4 font-semibold text-gray-900 dark:text-white transition-all hover:border-gray-400 dark:hover:border-gray-500 hover:shadow-md"
                 >
                   <Play className="mr-2 h-5 w-5" />
                   <span>Watch Demo</span>
@@ -147,19 +147,19 @@ export default function ProfessionalLandingPage() {
             </div>
 
             <div className="flex-1 w-full">
-          <div className="relative">
-            <div className="absolute -inset-4 bg-gradient-to-br from-blue-200 to-purple-200 rounded-3xl blur-2xl opacity-30"></div>
-            <div className="relative">
-              <Image
-                src="/dashboard.png"
-                alt="AIcruiter Dashboard Preview"
-                width={1200}
-                height={840}
-                className="rounded-3xl shadow-2xl border border-gray-200/50"
-              />
+              <div className="relative">
+                <div className="absolute -inset-4 bg-gradient-to-br from-blue-200 to-purple-200 dark:from-blue-900/50 dark:to-purple-900/50 rounded-3xl blur-2xl opacity-30"></div>
+                <div className="relative">
+                  <Image
+                    src="/dashboard.png"
+                    alt="AIcruiter Dashboard Preview"
+                    width={1200}
+                    height={840}
+                    className="rounded-3xl shadow-2xl border border-gray-200/50 dark:border-gray-700/50"
+                  />
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
           </div>
         </section>
 
