@@ -2,6 +2,7 @@
 import { useRouter } from "next/navigation";
 import { supabase } from "@/services/supabaseClient"; // adjust path if different
 import { toast } from "sonner"; // optional
+import { ThemeToggle } from "../_components/ThemeToggle";
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -25,9 +26,14 @@ export default function SettingsPage() {
         <p className="text-gray-600 dark:text-gray-400 mb-6">
           Manage your account preferences and security.
         </p>
+        <div className="flex items-center justify-between border-t pt-4 mt-4">
+          <p className="text-gray-600 dark:text-gray-400">Switch Theme</p>
+          <ThemeToggle />
+        </div>
+
         <button
           onClick={handleLogout}
-          className="w-full bg-red-600 text-white py-2 rounded hover:bg-red-700 transition"
+          className="w-full bg-red-600 text-white py-2 rounded hover:bg-red-700 transition mt-6"
         >
           Logout
         </button>

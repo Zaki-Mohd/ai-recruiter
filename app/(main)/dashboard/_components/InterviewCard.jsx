@@ -22,16 +22,18 @@ function InterviewCard({ interview, detail = false }) {
   };
 
   return (
-    <div className="p-5 bg-white rounded-lg border">
+    <div className="p-5 bg-white dark:bg-gray-800 rounded-lg border dark:border-gray-700">
       <div className="flex items-center justify-between">
         <div className="h-[40px] w-[40px] bg-primary rounded-full"></div>
-        <h2 className="text-sm">
+        <h2 className="text-sm dark:text-gray-300">
           {moment(interview?.created_at).format("DD MMM yyyy")}
         </h2>
       </div>
 
-      <h2 className="mt-3 font-bold text-lg">{interview?.jobPosition}</h2>
-      <h2 className="mt-2 flex justify-between">
+      <h2 className="mt-3 font-bold text-lg dark:text-white">
+        {interview?.jobPosition}
+      </h2>
+      <h2 className="mt-2 flex justify-between dark:text-gray-300">
         {interview?.duration}
         <span>{interview["interview-feedback"]?.length} Candidates</span>
       </h2>
@@ -40,7 +42,7 @@ function InterviewCard({ interview, detail = false }) {
         <div className="flex gap-3 mt-4">
           <Button
             variant="outline"
-            className="w-full flex-1 hover:bg-gray-100 hover:text-black transition"
+            className="w-full flex-1 hover:bg-gray-100 hover:text-black dark:hover:bg-gray-700 dark:hover:text-white dark:text-gray-200 dark:border-gray-600 transition"
             onClick={copyLink}
           >
             <Copy className="mr-2" />
@@ -59,7 +61,7 @@ function InterviewCard({ interview, detail = false }) {
         <Link
           href={"/schuduled-interview/" + interview?.interview_id + "/details"}
         >
-          <Button className="mt-5 w-full" variant="outline">
+          <Button className="mt-5 w-full dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600">
             View Details <ArrowRight />
           </Button>
         </Link>
