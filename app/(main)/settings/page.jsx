@@ -1,7 +1,10 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/services/supabaseClient"; // adjust path if different
-import { toast } from "sonner"; // optional
+import { supabase } from "@/services/supabaseClient";
+import { toast } from "sonner";
+import { ThemeToggle } from "../_components/ThemeToggle";
+
+
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -20,14 +23,20 @@ export default function SettingsPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 px-4">
-      <div className="bg-white dark:bg-gray-800 rounded shadow p-8 max-w-md w-full text-center">
-        <h1 className="text-2xl font-bold mb-2 text-gray-900 dark:text-white">Settings</h1>
-        <p className="text-gray-600 dark:text-gray-400 mb-6">
+      <div className="bg-white dark:bg-gray-800 rounded shadow p-8 max-w-md w-full">
+        <h1 className="text-2xl font-bold mb-2 text-center text-gray-900 dark:text-white">Settings</h1>
+        <p className="text-gray-600 dark:text-gray-400 mb-6 text-center">
           Manage your account preferences and security.
         </p>
+
+        <div className="flex items-center justify-between border-t pt-4 mt-4">
+          <p className='text-gray-600 dark:text-gray-400'>Switch Theme</p>
+          <ThemeToggle />
+        </div>
+
         <button
           onClick={handleLogout}
-          className="w-full bg-red-600 text-white py-2 rounded hover:bg-red-700 transition"
+          className="w-full bg-red-600 text-white py-2 rounded hover:bg-red-700 transition mt-6"
         >
           Logout
         </button>
