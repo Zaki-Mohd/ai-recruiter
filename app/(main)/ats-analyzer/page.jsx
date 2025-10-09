@@ -1,4 +1,4 @@
-"use client"
+'use client'
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import React, { useState } from 'react';
@@ -154,7 +154,6 @@ const ATSPage = () => {
                 </div>
             </div>
         )}
-        <ParseResume />
     </div>
   )
 }
