@@ -19,6 +19,7 @@ function StartInterview() {
   const [timeLeft, setTimeLeft] = useState(0);
   const [isResumeInterview, setIsResumeInterview] = useState(false);
   const [isCallActive, setIsCallActive] = useState(false);
+  const [isGeneratingFeedback, setIsGeneratingFeedback] = useState(false);
   const conversationRef = useRef([]);
 
   useEffect(() => {
@@ -166,30 +167,52 @@ Your task is to ask the candidate the following questions one by one.
     vapi?.stop();
   };
 
-  const onInterviewCompleted = useCallback(async () => {
-    const conversation = conversationRef.current;
-    if (conversation.length === 0) {
-      toast.error('No conversation was recorded.');
-      router.push(`/interview/${interview_id}/completed`);
-      return;
+  const GenerateFeedback = useCallback(async () => {
+    if (isGeneratingFeedback) return;
+    setIsGeneratingFeedback(true);
+    try {
+        const conversation = conversationRef.current;
+        if (conversation.length === 0) {
+            toast.error("No conversation was recorded.");
+            router.push(`/interview/${interview_id}/completed`);
+            return;
+        }
+
+        const result = await fetch("/api/ai-feedback", {
+            method: 'POST',
+            body: JSON.stringify({ conversation: conversation }),
+        });
+
+        const data = await result.json();
+
+        const content = data?.content?.replace("```json", "")?.replace("```", "");
+        if (!content) throw new Error("Feedback content is empty");
+
+        const { error } = await supabase.from("interview-feedback").insert([
+            {
+                userName: interviewInfo?.candidate_name,
+                userEmail: interviewInfo?.userEmail,
+                interview_id: interview_id,
+                feedback: JSON.parse(content),
+                recommended: false,
+            },
+        ]);
+
+        if (error) {
+            throw error;
+        }
+
+        toast.success("Feedback generated successfully!");
+        router.replace(`/interview/${interview_id}/completed`);
+    } catch (error) {
+        console.error("Feedback generation failed:", error);
+        toast.error("Failed to generate feedback");
+        router.push(`/interview/${interview_id}/completed`);
+    } finally {
+        setIsGeneratingFeedback(false);
     }
-    const res = await fetch('/api/ai-feedback', {
-      method: 'POST',
-      body: JSON.stringify({ Conversation: conversation }),
-    });
-    const data = await res.json();
-    const { error } = await supabase.from('interview-feedback').update({
-      feedback: data,
-    }).eq('interview_id', interview_id);
-    if (!error) {
-      router.push(`/interview/${interview_id}/completed`);
-      toast.success('Interview feedback saved successfully.');
-      console.log('Feedback saved:', data);
-    } else {
-      toast.error('Failed to save interview feedback.');
-      router.push(`/interview/${interview_id}/completed`);
-    }
-  }, [interview_id, router]);
+  }, [interview_id, router, interviewInfo, isGeneratingFeedback]);
+
 
   useEffect(() => {
     if (!vapi) return;
@@ -199,7 +222,7 @@ Your task is to ask the candidate the following questions one by one.
     };
     const handleCallEnd = () => {
       toast('Interview Ended');
-      onInterviewCompleted();
+      GenerateFeedback();
       setIsCallActive(false);
     };
     vapi.on('call-start', handleCallStart);
@@ -208,7 +231,7 @@ Your task is to ask the candidate the following questions one by one.
       vapi.off('call-start', handleCallStart);
       vapi.off('call-end', handleCallEnd);
     };
-  }, [vapi, onInterviewCompleted]);
+  }, [vapi, GenerateFeedback]);
 
   if (loading || !interviewInfo?.interviewData) {
     return (
