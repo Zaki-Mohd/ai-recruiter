@@ -8,10 +8,11 @@ const openai = new OpenAI({
 });
 
 export async function POST(req) {
-  const { Conversation } = await req.json();
+  const { conversation } = await req.json();
+
   const FINAL_PROMPT = FEEDBACK_PROMPT.replace(
     "{{conversation}}",
-    JSON.stringify(Conversation)
+    JSON.stringify(conversation)
   );
 
   try {
@@ -19,12 +20,13 @@ export async function POST(req) {
       model: "openai/gpt-3.5-turbo",
       messages: [{ role: "user", content: FINAL_PROMPT }],
       max_tokens: 1000,
+      response_format: { type: "json_object" },
     });
-    const feedback = chatCompletion.choices[0].message.content;
+    const feedbackContent = chatCompletion.choices[0].message.content;
 
-    return NextResponse.json({ content: feedback });
+    return NextResponse.json({ content: feedbackContent });
   } catch (e) {
-    console.log(e);
-    return NextResponse.json({ error: e });
+    console.log("API Error:", e);
+    return NextResponse.json({ error: e.message }, { status: 500 });
   }
 }

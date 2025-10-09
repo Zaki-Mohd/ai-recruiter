@@ -110,13 +110,13 @@ function StartInterview() {
       systemContent = `
 You are an AI voice assistant conducting a professional job interview.
 Your primary goal is to evaluate the candidate based on the resume provided.
-**Candidate's Resume:**
+**Candidate\'s Resume:**
 ---
 ${resumeData.resumeText}
 ---
 **Your Task:**
 1. Start with a friendly introduction for the role of ${interviewData.jobPosition}.
-2. Ask insightful questions directly related to the candidate's experience, projects, and skills listed in their resume.
+2. Ask insightful questions directly related to the candidate\'s experience, projects, and skills listed in their resume.
 3. Maintain a professional and encouraging tone.
       `.trim();
       firstMessage = `Hi ${candidateName}, thank you for providing your resume. Are you ready to begin your interview for the ${interviewData.jobPosition}?`;
@@ -183,6 +183,8 @@ Your task is to ask the candidate the following questions one by one.
     }).eq('interview_id', interview_id);
     if (!error) {
       router.push(`/interview/${interview_id}/completed`);
+      toast.success('Interview feedback saved successfully.');
+      console.log('Feedback saved:', data);
     } else {
       toast.error('Failed to save interview feedback.');
       router.push(`/interview/${interview_id}/completed`);
