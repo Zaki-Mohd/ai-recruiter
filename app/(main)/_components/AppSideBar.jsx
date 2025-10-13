@@ -34,7 +34,7 @@ export function AppSidebar() {
           <SidebarMenu>
             {SideBarOptions.map((option,index)=>(
               <SidebarMenuItem key={index} className='p-1'>
-                <SidebarMenuButton asChild className={`p-5 ${path == option.path && `bg-blue-50`}`} >
+                <SidebarMenuButton asChild className={`p-5 ${path == option.path && `bg-blue-150`}`} >
                   <Link href={option.path}>
                   <option.icon className={`${path == option.path && 'text-primary'}`}/>
                   <span className={`text-[16px] font-medium ${path == option.path && 'text-primary'}`}>{option.name}</span>
