@@ -1,7 +1,25 @@
 "use client";
 import { useState, useEffect } from "react";
-import { ArrowRight, BrainCircuit, Clock, BarChartBig, Scale, Zap, CheckCircle, Menu, X, Sparkles, Users, TrendingUp, Play, MessageSquare, FileText, Award } from "lucide-react";
+import {
+  ArrowRight,
+  BrainCircuit,
+  Clock,
+  BarChartBig,
+  Scale,
+  Zap,
+  CheckCircle,
+  Menu,
+  X,
+  Sparkles,
+  Users,
+  TrendingUp,
+  Play,
+  MessageSquare,
+  FileText,
+  Award,
+} from "lucide-react";
 import Image from "next/image";
+import { supabase } from "@/services/supabaseClient";
 
 export default function ProfessionalLandingPage() {
   const [mounted, setMounted] = useState(false);
@@ -14,13 +32,47 @@ export default function ProfessionalLandingPage() {
   if (!mounted) return null;
 
   const handleDashboardClick = () => {
-    window.location.href = "/auth";
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (user) {
+        supabase
+          .from("Users")
+          .select("*")
+          .eq("email", user?.email)
+          .then(({ data: Users, error }) => {
+            if (error) {
+              console.error("Error fetching user:", error);
+            }
+
+            if (!Users || Users.length === 0) {
+              supabase
+                .from("Users")
+                .insert([
+                  {
+                    name: user?.user_metadata?.name,
+                    email: user?.email,
+                    picture: user?.user_metadata?.picture,
+                  },
+                ])
+                .then(({ data, error }) => {
+                  if (error) console.error("Error creating user:", error);
+                  console.log("New user created:", data);
+                  window.location.href = "/dashboard";
+                });
+            } else {
+              window.location.href = "/dashboard";
+            }
+          });
+      } else {
+        // redirect if not logged in
+        window.location.href = "/auth";
+      }
+    });
   };
 
   const scrollToSection = (id) => {
     const element = document.getElementById(id);
     if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+      element.scrollIntoView({ behavior: "smooth" });
       setMobileMenuOpen(false);
     }
   };
@@ -37,7 +89,10 @@ export default function ProfessionalLandingPage() {
       {/* Navbar */}
       <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white/95 backdrop-blur-sm shadow-sm">
         <div className="container mx-auto flex h-16 items-center justify-between px-6 max-w-7xl">
-          <button onClick={handleDashboardClick} className="flex items-center gap-2">
+          <button
+            onClick={handleDashboardClick}
+            className="flex items-center gap-2"
+          >
             <div className="w-9 h-9 bg-gradient-to-br from-blue-600 to-blue-500 rounded-lg flex items-center justify-center shadow-md">
               <BrainCircuit className="w-5 h-5 text-white" />
             </div>
@@ -46,13 +101,22 @@ export default function ProfessionalLandingPage() {
 
           {/* Desktop Menu */}
           <nav className="hidden md:flex items-center gap-8 text-sm font-medium">
-            <button onClick={() => scrollToSection('features')} className="text-gray-600 hover:text-blue-600 transition-colors">
+            <button
+              onClick={() => scrollToSection("features")}
+              className="text-gray-600 hover:text-blue-600 transition-colors"
+            >
               Features
             </button>
-            <button onClick={() => scrollToSection('how-it-works')} className="text-gray-600 hover:text-blue-600 transition-colors">
+            <button
+              onClick={() => scrollToSection("how-it-works")}
+              className="text-gray-600 hover:text-blue-600 transition-colors"
+            >
               How It Works
             </button>
-            <button onClick={() => scrollToSection('pricing')} className="text-gray-600 hover:text-blue-600 transition-colors">
+            <button
+              onClick={() => scrollToSection("pricing")}
+              className="text-gray-600 hover:text-blue-600 transition-colors"
+            >
               Pricing
             </button>
           </nav>
@@ -69,7 +133,11 @@ export default function ProfessionalLandingPage() {
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="md:hidden p-2 text-gray-600 hover:text-gray-900"
             >
-              {mobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+              {mobileMenuOpen ? (
+                <X className="h-6 w-6" />
+              ) : (
+                <Menu className="h-6 w-6" />
+              )}
             </button>
           </div>
         </div>
@@ -78,13 +146,22 @@ export default function ProfessionalLandingPage() {
         {mobileMenuOpen && (
           <div className="md:hidden border-t border-gray-200 bg-white shadow-lg">
             <div className="container mx-auto px-6 py-4 space-y-3">
-              <button onClick={() => scrollToSection('features')} className="block w-full text-left py-2 text-gray-600 hover:text-blue-600 font-medium">
+              <button
+                onClick={() => scrollToSection("features")}
+                className="block w-full text-left py-2 text-gray-600 hover:text-blue-600 font-medium"
+              >
                 Features
               </button>
-              <button onClick={() => scrollToSection('how-it-works')} className="block w-full text-left py-2 text-gray-600 hover:text-blue-600 font-medium">
+              <button
+                onClick={() => scrollToSection("how-it-works")}
+                className="block w-full text-left py-2 text-gray-600 hover:text-blue-600 font-medium"
+              >
                 How It Works
               </button>
-              <button onClick={() => scrollToSection('pricing')} className="block w-full text-left py-2 text-gray-600 hover:text-blue-600 font-medium">
+              <button
+                onClick={() => scrollToSection("pricing")}
+                className="block w-full text-left py-2 text-gray-600 hover:text-blue-600 font-medium"
+              >
                 Pricing
               </button>
               <button
@@ -114,7 +191,9 @@ export default function ProfessionalLandingPage() {
               </h1>
 
               <p className="text-xl text-gray-600 max-w-2xl">
-                AIcruiter automates initial screening interviews with AI voice agents, providing deep candidate analysis so you can focus on finding the perfect match.
+                AIcruiter automates initial screening interviews with AI voice
+                agents, providing deep candidate analysis so you can focus on
+                finding the perfect match.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
@@ -136,19 +215,19 @@ export default function ProfessionalLandingPage() {
             </div>
 
             <div className="flex-1 w-full">
-          <div className="relative">
-            <div className="absolute -inset-4 bg-gradient-to-br from-blue-200 to-purple-200 rounded-3xl blur-2xl opacity-30"></div>
-            <div className="relative">
-              <Image
-                src="/dashboard.png"
-                alt="AIcruiter Dashboard Preview"
-                width={1200}
-                height={840}
-                className="rounded-3xl shadow-2xl border border-gray-200/50"
-              />
+              <div className="relative">
+                <div className="absolute -inset-4 bg-gradient-to-br from-blue-200 to-purple-200 rounded-3xl blur-2xl opacity-30"></div>
+                <div className="relative">
+                  <Image
+                    src="/dashboard.png"
+                    alt="AIcruiter Dashboard Preview"
+                    width={1200}
+                    height={840}
+                    className="rounded-3xl shadow-2xl border border-gray-200/50"
+                  />
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
           </div>
         </section>
 
@@ -160,7 +239,8 @@ export default function ProfessionalLandingPage() {
                 The Future of Interviewing is Here
               </h2>
               <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                Unlock powerful tools designed to give you a competitive edge in talent acquisition
+                Unlock powerful tools designed to give you a competitive edge in
+                talent acquisition
               </p>
             </div>
 
@@ -214,19 +294,22 @@ export default function ProfessionalLandingPage() {
                 {
                   number: "01",
                   title: "Create Your Interview",
-                  description: "Use our templates or create custom questions for your job role. Set your evaluation criteria and branding in minutes.",
+                  description:
+                    "Use our templates or create custom questions for your job role. Set your evaluation criteria and branding in minutes.",
                   icon: <BrainCircuit className="w-6 h-6" />,
                 },
                 {
                   number: "02",
                   title: "Invite Candidates",
-                  description: "Share a single link with all applicants. They complete the interview on their own schedule, 24/7.",
+                  description:
+                    "Share a single link with all applicants. They complete the interview on their own schedule, 24/7.",
                   icon: <Users className="w-6 h-6" />,
                 },
                 {
                   number: "03",
                   title: "Review AI Analysis",
-                  description: "Receive a dashboard with ranked candidates, full transcripts, and deep insights to make your decision.",
+                  description:
+                    "Receive a dashboard with ranked candidates, full transcripts, and deep insights to make your decision.",
                   icon: <TrendingUp className="w-6 h-6" />,
                 },
               ].map((step, idx) => (
@@ -235,9 +318,15 @@ export default function ProfessionalLandingPage() {
                     <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-blue-500 rounded-xl flex items-center justify-center mb-6 mx-auto text-white shadow-lg">
                       {step.icon}
                     </div>
-                    <div className="text-sm font-bold text-blue-600 text-center mb-2">STEP {step.number}</div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-3 text-center">{step.title}</h3>
-                    <p className="text-gray-600 text-center">{step.description}</p>
+                    <div className="text-sm font-bold text-blue-600 text-center mb-2">
+                      STEP {step.number}
+                    </div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-3 text-center">
+                      {step.title}
+                    </h3>
+                    <p className="text-gray-600 text-center">
+                      {step.description}
+                    </p>
                   </div>
                 </div>
               ))}
@@ -255,7 +344,8 @@ export default function ProfessionalLandingPage() {
                   Ready to Transform Your Hiring Process?
                 </h2>
                 <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-                  Join companies already using AIcruiter to find the best talent faster and smarter.
+                  Join companies already using AIcruiter to find the best talent
+                  faster and smarter.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <button
@@ -294,24 +384,64 @@ export default function ProfessionalLandingPage() {
             <div>
               <h3 className="font-semibold text-gray-900 mb-4">Product</h3>
               <div className="flex flex-col gap-3 text-sm text-gray-600">
-                <button onClick={() => scrollToSection('features')} className="text-left hover:text-blue-600 transition-colors">Features</button>
-                <button onClick={() => scrollToSection('pricing')} className="text-left hover:text-blue-600 transition-colors">Pricing</button>
-                <button onClick={handleDashboardClick} className="text-left hover:text-blue-600 transition-colors">Demo</button>
+                <button
+                  onClick={() => scrollToSection("features")}
+                  className="text-left hover:text-blue-600 transition-colors"
+                >
+                  Features
+                </button>
+                <button
+                  onClick={() => scrollToSection("pricing")}
+                  className="text-left hover:text-blue-600 transition-colors"
+                >
+                  Pricing
+                </button>
+                <button
+                  onClick={handleDashboardClick}
+                  className="text-left hover:text-blue-600 transition-colors"
+                >
+                  Demo
+                </button>
               </div>
             </div>
             <div>
               <h3 className="font-semibold text-gray-900 mb-4">Company</h3>
               <div className="flex flex-col gap-3 text-sm text-gray-600">
-                <button onClick={handleDashboardClick} className="text-left hover:text-blue-600 transition-colors">About Us</button>
-                <button onClick={handleDashboardClick} className="text-left hover:text-blue-600 transition-colors">Careers</button>
-                <button onClick={handleDashboardClick} className="text-left hover:text-blue-600 transition-colors">Contact</button>
+                <button
+                  onClick={handleDashboardClick}
+                  className="text-left hover:text-blue-600 transition-colors"
+                >
+                  About Us
+                </button>
+                <button
+                  onClick={handleDashboardClick}
+                  className="text-left hover:text-blue-600 transition-colors"
+                >
+                  Careers
+                </button>
+                <button
+                  onClick={handleDashboardClick}
+                  className="text-left hover:text-blue-600 transition-colors"
+                >
+                  Contact
+                </button>
               </div>
             </div>
             <div>
               <h3 className="font-semibold text-gray-900 mb-4">Legal</h3>
               <div className="flex flex-col gap-3 text-sm text-gray-600">
-                <button onClick={handleDashboardClick} className="text-left hover:text-blue-600 transition-colors">Privacy Policy</button>
-                <button onClick={handleDashboardClick} className="text-left hover:text-blue-600 transition-colors">Terms of Service</button>
+                <button
+                  onClick={handleDashboardClick}
+                  className="text-left hover:text-blue-600 transition-colors"
+                >
+                  Privacy Policy
+                </button>
+                <button
+                  onClick={handleDashboardClick}
+                  className="text-left hover:text-blue-600 transition-colors"
+                >
+                  Terms of Service
+                </button>
               </div>
             </div>
             <div>
@@ -322,7 +452,10 @@ export default function ProfessionalLandingPage() {
             </div>
           </div>
           <div className="pt-8 border-t border-gray-200 flex flex-col md:flex-row justify-between items-center gap-4">
-            <button onClick={handleDashboardClick} className="flex items-center gap-2">
+            <button
+              onClick={handleDashboardClick}
+              className="flex items-center gap-2"
+            >
               <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-500 rounded-lg flex items-center justify-center">
                 <BrainCircuit className="w-5 h-5 text-white" />
               </div>
@@ -340,7 +473,11 @@ export default function ProfessionalLandingPage() {
 
 function FeatureCard({ className, icon, title, description }) {
   return (
-    <div className={`relative overflow-hidden rounded-2xl bg-white p-8 shadow-lg border border-gray-200 hover:shadow-xl hover:border-blue-200 transition-all group ${className || ""}`}>
+    <div
+      className={`relative overflow-hidden rounded-2xl bg-white p-8 shadow-lg border border-gray-200 hover:shadow-xl hover:border-blue-200 transition-all group ${
+        className || ""
+      }`}
+    >
       <div className="absolute -right-10 -top-10 h-32 w-32 rounded-full bg-blue-50 opacity-50 group-hover:opacity-100 transition-opacity"></div>
       <div className="relative z-10">
         <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-blue-50 border border-blue-100 mb-4">
