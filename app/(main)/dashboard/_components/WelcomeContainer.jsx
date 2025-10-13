@@ -1,25 +1,41 @@
 "use client";
-import { useUser } from '@/app/provider';
-import Image from 'next/image';
-import React from 'react';
+
+import { useUser } from "@/app/provider";
+import Image from "next/image";
+import React from "react";
 
 function WelcomeContainer() {
   const { user } = useUser();
-  console.log("User in WelcomeContainer:");
 
   return (
-    <div className='bg-gray-200 p-3 rounded-xl flex items-center justify-between'>
-      <div >
-      {user ? (
-        <h1 className='text-lg font-bold'>Welcome Back, {user.name || user.email || "User"}!</h1>
-        
-        
-      ) : (
-        <h1>Welcome, Guest!</h1>
-      )}
-      <h2 className='text-grey'>AI-Driven Interviews, Hassel free hiring</h2>
+    <div className="bg-gray-100 dark:bg-gray-900 border border-gray-300 dark:border-gray-800 p-4 rounded-xl flex items-center justify-between shadow-sm transition-colors duration-300">
+      {/* Left side text */}
+      <div>
+        {user ? (
+          <h1 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+            Welcome Back, {user.name || user.email || "User"}!
+          </h1>
+        ) : (
+          <h1 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+            Welcome, Guest!
+          </h1>
+        )}
+
+        <h2 className="text-sm text-gray-600 dark:text-gray-400">
+          AI-Driven Interviews, Hassle-Free Hiring
+        </h2>
       </div>
-      {user && <Image src={user?.picture} alt='userAvatar' width={40} height={40} className='rounded-full'></Image>}
+
+      {/* Right side avatar */}
+      {user?.picture && (
+        <Image
+          src={user.picture}
+          alt={user.name ? `${user.name}'s avatar` : "User avatar"}
+          width={48}
+          height={48}
+          className="rounded-full border border-gray-300 dark:border-gray-700"
+        />
+      )}
     </div>
   );
 }
