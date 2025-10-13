@@ -11,7 +11,7 @@ const openai = new OpenAI({
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 
 export async function POST(req) {
-  const { jobPosition, jobDescription, duration, type, model } = await req.json();
+  const { jobPosition, jobDescription, duration, type, model = "openai/gpt-3.5-turbo" } = await req.json();
 
   const FINAL_PROMPT = QUESTIONS_PROMPT
     .replace("{{jobTitle}}", jobPosition)
@@ -39,7 +39,7 @@ export async function POST(req) {
     }
 
     console.log("Completion:", completion);
-    return NextResponse.json({ message: completion });
+    return NextResponse.json({ content: completion });
   } catch (e) {
     console.log(e);
     return NextResponse.json({ error: e });
