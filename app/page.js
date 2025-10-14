@@ -1,7 +1,7 @@
 "use client";
-import { useState, useEffect } from "react";
-import { ArrowRight, BrainCircuit, Clock, BarChartBig, Scale, Zap, CheckCircle, Menu, X, Sparkles, Users, TrendingUp, Play, MessageSquare, FileText, Award } from "lucide-react";
+import { ArrowRight, Award, BarChartBig, BrainCircuit, CheckCircle, Clock, FileText, Menu, MessageSquare, Play, Scale, Sparkles, TrendingUp, Users, X, Zap } from "lucide-react";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 export default function ProfessionalLandingPage() {
   const [mounted, setMounted] = useState(false);
@@ -11,11 +11,12 @@ export default function ProfessionalLandingPage() {
     setMounted(true);
   }, []);
 
-  if (!mounted) return null;
-
   const handleDashboardClick = () => {
-    window.location.href = "/auth";
+    if (typeof window !== "undefined") {
+      window.location.href = "/auth";
+    }
   };
+
 
   const scrollToSection = (id) => {
     const element = document.getElementById(id);
