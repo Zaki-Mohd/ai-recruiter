@@ -1,28 +1,28 @@
 "use client";
-import * as React from "react"
-import { Slot } from "@radix-ui/react-slot"
+import { Slot } from "@radix-ui/react-slot";
 import { cva } from "class-variance-authority";
-import { PanelLeftIcon } from "lucide-react"
+import { PanelLeftIcon } from "lucide-react";
+import * as React from "react";
 
-import { useIsMobile } from "@/hooks/use-mobile"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Separator } from "@/components/ui/separator"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
 import {
   Sheet,
   SheetContent,
   SheetDescription,
   SheetHeader,
   SheetTitle,
-} from "@/components/ui/sheet"
-import { Skeleton } from "@/components/ui/skeleton"
+} from "@/components/ui/sheet";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip"
+} from "@/components/ui/tooltip";
+import { useIsMobile } from "@/hooks/use-mobile";
+import { cn } from "@/lib/utils";
 
 const SIDEBAR_COOKIE_NAME = "sidebar_state"
 const SIDEBAR_COOKIE_MAX_AGE = 60 * 60 * 24 * 7
@@ -54,6 +54,14 @@ function SidebarProvider({
   const isMobile = useIsMobile()
   const [openMobile, setOpenMobile] = React.useState(false)
 
+
+  React.useEffect(() => {
+    if (isMobile) {
+      // Always start closed on mobile
+      setOpenMobile(false)
+    }
+  }, [isMobile])
+
   // This is the internal state of the sidebar.
   // We use openProp and setOpenProp for control from outside the component.
   const [_open, _setOpen] = React.useState(defaultOpen)
@@ -73,7 +81,7 @@ function SidebarProvider({
   // Helper to toggle the sidebar.
   const toggleSidebar = React.useCallback(() => {
     return isMobile ? setOpenMobile((open) => !open) : setOpen((open) => !open);
-  }, [isMobile, setOpen, setOpenMobile])
+  }, [isMobile, setOpen])
 
   // Adds a keyboard shortcut to toggle the sidebar.
   React.useEffect(() => {
@@ -93,17 +101,17 @@ function SidebarProvider({
 
   // We add a state so that we can do data-state="expanded" or "collapsed".
   // This makes it easier to style the sidebar with Tailwind classes.
-  const state = open ? "expanded" : "collapsed"
+  // const state = open ? "expanded" : "collapsed"
 
   const contextValue = React.useMemo(() => ({
-    state,
     open,
     setOpen,
     isMobile,
     openMobile,
     setOpenMobile,
     toggleSidebar,
-  }), [state, open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar])
+    state : open ? "expanded" : "collapsed"
+  }), [open, setOpen, isMobile, openMobile, setOpenMobile, toggleSidebar])
 
   return (
     <SidebarContext.Provider value={contextValue}>
@@ -171,7 +179,8 @@ function Sidebar({
             <SheetTitle>Sidebar</SheetTitle>
             <SheetDescription>Displays the mobile sidebar.</SheetDescription>
           </SheetHeader>
-          <div className="flex h-full w-full flex-col">{children}</div>
+          <div className="flex h-full w-full flex-col"
+              onClick={() => setOpenMobile(false)}>{children}</div>
         </SheetContent>
       </Sheet>
     );
@@ -678,5 +687,6 @@ export {
   SidebarRail,
   SidebarSeparator,
   SidebarTrigger,
-  useSidebar,
-}
+  useSidebar
+};
+
