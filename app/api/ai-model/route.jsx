@@ -25,11 +25,17 @@ export async function POST(req) {
     let completion;
 
     if (model.startsWith("google/")) {
+      if (!process.env.GOOGLE_API_KEY) {
+        return NextResponse.json({ error: "Missing GOOGLE_API_KEY" }, { status: 500 });
+      }
       const geminiModel = genAI.getGenerativeModel({ model: "gemini-pro" });
       const result = await geminiModel.generateContent(FINAL_PROMPT);
       const response = await result.response;
       completion = response.text();
     } else {
+      if (!process.env.OPEN_ROUTER_KEY) {
+        return NextResponse.json({ error: "Missing OPEN_ROUTER_KEY" }, { status: 500 });
+      }
       const chatCompletion = await openai.chat.completions.create({
         model: model,
         messages: [{ role: "user", content: FINAL_PROMPT }],
@@ -41,7 +47,8 @@ export async function POST(req) {
     console.log("Completion:", completion);
     return NextResponse.json({ content: completion });
   } catch (e) {
-    console.log(e);
-    return NextResponse.json({ error: e });
+    console.error("/api/ai-model error:", e);
+    const message = typeof e === "string" ? e : e?.message || "Internal Server Error";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
