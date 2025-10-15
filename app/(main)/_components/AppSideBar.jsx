@@ -16,6 +16,7 @@ import { Plus } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 export function AppSidebar() {
   const path = usePathname();
@@ -51,7 +52,11 @@ export function AppSidebar() {
           </SidebarGroup>
         
       </SidebarContent>
-      <SidebarFooter />
+      <SidebarFooter className="p-4">
+        <div className="flex items-center justify-center">
+          <ThemeToggle />
+        </div>
+      </SidebarFooter>
     </Sidebar>
   )
 }

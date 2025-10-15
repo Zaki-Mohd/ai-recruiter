@@ -39,13 +39,13 @@ const Login = () => {
 
         {/* Nav Links */}
         <div className="hidden md:flex space-x-6">
-          <button className="text-gray-700 hover:text-black transition">
+          <button className="text-muted-foreground hover:text-foreground transition-colors">
             Features
           </button>
-          <button className="text-gray-700 hover:text-black transition">
+          <button className="text-muted-foreground hover:text-foreground transition-colors">
             How It Works
           </button>
-          <button className="text-gray-700 hover:text-black transition">
+          <button className="text-muted-foreground hover:text-foreground transition-colors">
             Pricing
           </button>
         </div>

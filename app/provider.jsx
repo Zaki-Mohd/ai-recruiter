@@ -1,10 +1,12 @@
 "use client";
 import { UserDetailContext } from "@/context/UserDetailContext";
-import { supabase } from "@/services/supabaseClient";
+import { ThemeProvider } from "@/context/ThemeContext";
+import { supabase, isSupabaseConfigured } from "@/services/supabaseClient";
 import React,{useEffect, useState,useContext} from "react";
 function Provider({children}) {
     const [user,setUser]=useState();
     useEffect(() => {
+        if (!isSupabaseConfigured) return; // Skip when Supabase isn't configured
         CreateNewUser();
     }, []);
 const CreateNewUser=() => {
@@ -33,9 +35,11 @@ const CreateNewUser=() => {
     })
 }
 return (
-    <UserDetailContext.Provider value={{user,setUser}}>
-    <div>{children}</div>
-    </UserDetailContext.Provider>
+    <ThemeProvider>
+        <UserDetailContext.Provider value={{user,setUser}}>
+            <div>{children}</div>
+        </UserDetailContext.Provider>
+    </ThemeProvider>
 )
 }
 export default Provider;
