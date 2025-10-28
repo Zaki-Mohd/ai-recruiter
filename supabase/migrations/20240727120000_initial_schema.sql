@@ -25,13 +25,3 @@ CREATE TABLE resumes (
     resumeText character varying,
     interview_id character varying
 );
-
-CREATE TABLE "interview-feedback" (
-    id bigint,
-    created_at timestamp with time zone,
-    feedback json,
-    recommended boolean,
-    userEmail character varying,
-    interview_id character varying,
-    userName character varying
-);
