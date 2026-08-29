@@ -1,8 +1,10 @@
 "use client";
 import { toast } from "sonner"; // adjust if you use another toast lib
 import { CreditCard, CheckCircle, Zap, Shield } from "lucide-react"; // free icons from lucide-react
+import { useUser } from "@/app/provider";
 
 export default function BillingPage() {
+  const { user } = useUser();
   const handleUnderMaintenance = () => {
     toast.warning("⚠️ This feature is under maintenance. Please try again later.");
   };
@@ -21,7 +23,7 @@ export default function BillingPage() {
             <div className="bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-400 rounded-full p-3">
               <CreditCard size={24} />
             </div>
-            <span className="text-xl font-bold text-blue-600 dark:text-blue-400">3 interviews left</span>
+            <span className="text-xl font-bold text-blue-600 dark:text-blue-400">{user?.credits ?? 0} interviews left</span>
           </div>
           <button
             onClick={handleUnderMaintenance}

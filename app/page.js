@@ -38,9 +38,6 @@ export default function ProfessionalLandingPage() {
       <header className="sticky top-0 z-50 w-full border-b border-gray-200 bg-white/95 backdrop-blur-sm shadow-sm">
         <div className="container mx-auto flex h-16 items-center justify-between px-6 max-w-7xl">
           <button onClick={handleDashboardClick} className="flex items-center gap-2">
-            <div className="w-9 h-9 bg-gradient-to-br from-blue-600 to-blue-500 rounded-lg flex items-center justify-center shadow-md">
-              <BrainCircuit className="w-5 h-5 text-white" />
-            </div>
             <span className="text-xl font-bold text-gray-900">AIcruiter</span>
           </button>
 
@@ -323,9 +320,6 @@ export default function ProfessionalLandingPage() {
           </div>
           <div className="pt-8 border-t border-gray-200 flex flex-col md:flex-row justify-between items-center gap-4">
             <button onClick={handleDashboardClick} className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-500 rounded-lg flex items-center justify-center">
-                <BrainCircuit className="w-5 h-5 text-white" />
-              </div>
               <span className="text-lg font-bold text-gray-900">AIcruiter</span>
             </button>
             <div className="text-sm text-gray-600">

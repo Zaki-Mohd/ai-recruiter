@@ -28,7 +28,7 @@ function CreateInterview() {
             toast("Please Add Credits")
             return;
         }
-        if(!formData?.jobPosition || !formData?.jobDescription || !formData?.duration || !formData?.type ){
+        if(!formData?.jobPosition || !formData?.jobDescription || !formData?.duration || !formData?.type || (Array.isArray(formData.type) && formData.type.length === 0) ){
             toast('Please enter all details!')
             return ;
         }

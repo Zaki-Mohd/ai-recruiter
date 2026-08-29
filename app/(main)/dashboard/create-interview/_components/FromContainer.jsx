@@ -17,8 +17,10 @@ function FromContainer({onHandleInputChange, GoToNext}) {
 
         const [InterviewsType, setInterviewsType] = useState([]);
         useEffect(() => {   
-                if(InterviewsType){
+                if(InterviewsType.length > 0){
                     onHandleInputChange('type', InterviewsType);
+                } else {
+                    onHandleInputChange('type', null);
                 }
 
         },[InterviewsType])
@@ -71,7 +73,7 @@ function FromContainer({onHandleInputChange, GoToNext}) {
                 {InterviewType.map((type, index) => (
                     <div key={index} className={`
                     flex gap-2 items-center cursor-pointer hover:bg-secondary p-1 px-2 bg-white border border-gray-300 rounded-2xl
-                    ${InterviewsType.includes(type.title)&&'bg-blue-50 text-primary'}
+                    ${InterviewsType.includes(type.title) ? 'bg-blue-50 text-primary' : ''}
                     `}
                     onClick={()=> AddInterviewType(type.title)
 
