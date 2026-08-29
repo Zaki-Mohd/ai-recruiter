@@ -1,10 +1,15 @@
 import { NextResponse } from 'next/server';
 import mammoth from 'mammoth';
-import { supabase } from '../../../../services/supabaseClient';
+import { createClient } from '@supabase/supabase-js';
 import extract from 'pdf-extraction';
 import { v4 as uuidv4 } from 'uuid';
 
 export async function POST(request) {
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.NEXT_PUBLIC_SUPABASE_ANONKEY
+  );
+
   try {
     const formData = await request.formData();
     const file = formData.get('resume');

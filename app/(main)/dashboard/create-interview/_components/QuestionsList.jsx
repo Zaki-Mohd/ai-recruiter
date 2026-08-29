@@ -70,31 +70,45 @@ function QuestionsList({ formData, onCreateLink }) {
     setsaveLoading(true);
     const interview_id = uuidv4();
 
-    const { data, error } = await supabase
-      .from('Interviews')
-      .insert([
-        {
-          ...formData,
-          questionList: JSON.stringify(questionList),
-          userEmail: user?.email,
-          interview_id: interview_id,
-        },
-      ])
-      .select();
-    // User Credits Increment
+    // Prepare data for insert - stringify type if it's an array
+    const insertData = {
+      ...formData,
+      type: Array.isArray(formData.type) ? formData.type.join(', ') : formData.type,
+      questionList: JSON.stringify(questionList),
+      userEmail: user?.email,
+      interview_id: interview_id,
+    };
 
-    const userUpdate = await supabase
-      .from('Users')
-      .update({ credits: Number(user?.credits) - 1 })
-      .eq('email', user?.email)
-      .select();
+    try {
+      const { data, error } = await supabase
+        .from('Interviews')
+        .insert([insertData])
+        .select();
 
-    console.log(userUpdate);
-    setUser((prev) => ({ ...prev, credits: Number(user?.credits) - 1 }));
+      if (error) {
+        console.error("Supabase insert error:", error);
+        toast('Failed to create interview: ' + error.message);
+        setsaveLoading(false);
+        return;
+      }
 
-    setsaveLoading(false);
-    // console.log(data);
-    onCreateLink(interview_id);
+      // User Credits Increment
+      const userUpdate = await supabase
+        .from('Users')
+        .update({ credits: Number(user?.credits) - 1 })
+        .eq('email', user?.email)
+        .select();
+
+      console.log(userUpdate);
+      setUser((prev) => ({ ...prev, credits: Number(user?.credits) - 1 }));
+
+      setsaveLoading(false);
+      onCreateLink(interview_id);
+    } catch (err) {
+      console.error("Exception in onFinish:", err);
+      toast('An unexpected error occurred.');
+      setsaveLoading(false);
+    }
   };
 
   return (

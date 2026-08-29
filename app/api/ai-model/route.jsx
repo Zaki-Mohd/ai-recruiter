@@ -3,14 +3,14 @@ import { NextResponse } from "next/server";
 import OpenAI from "openai";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const openai = new OpenAI({
-  baseURL: "https://openrouter.ai/api/v1",
-  apiKey: process.env.OPEN_ROUTER_KEY,
-});
-
-const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
-
 export async function POST(req) {
+  const openai = new OpenAI({
+    baseURL: "https://openrouter.ai/api/v1",
+    apiKey: process.env.OPEN_ROUTER_KEY,
+  });
+
+  const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY || "");
+
   const { jobPosition, jobDescription, duration, type, model = "openai/gpt-3.5-turbo" } = await req.json();
 
   const FINAL_PROMPT = QUESTIONS_PROMPT

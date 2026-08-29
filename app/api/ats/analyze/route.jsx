@@ -2,13 +2,12 @@ import { NextResponse } from 'next/server';
 import { ATS_PROMPT } from '../../../../services/Constants';
 import OpenAI from 'openai';
 
-// Initialize the OpenRouter client
-const openai = new OpenAI({
-  baseURL: "https://openrouter.ai/api/v1",
-  apiKey: process.env.OPEN_ROUTER_KEY,
-});
-
 export async function POST(request) {
+  const openai = new OpenAI({
+    baseURL: "https://openrouter.ai/api/v1",
+    apiKey: process.env.OPEN_ROUTER_KEY,
+  });
+
   try {
     const { resume, jobDescription } = await request.json();
 
